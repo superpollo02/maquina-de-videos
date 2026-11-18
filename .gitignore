@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Archivos de caché y temporales
+*.log
+*.tmp
+frame_*.jpg
+films/**/preview_test.png
+films/**/test_voice.mp3
+films/**/still_*.png
+films/**/video_raw.mp4
+
+# Archivos zip grandes
+*.zip
+
+# OS
+Thumbs.db
+.DS_Store

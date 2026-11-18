@@ -1,0 +1,8 @@
+En cursos virtuales autoadministrados, el abandono suele rondar el setenta por ciento.
+Para el estudiante adulto, la desorientación en la plataforma agota su energía mental.
+La solución es la predictibilidad: la Estructura Tripartita del aula.
+Cada unidad se organiza siempre en tres momentos consecutivos.
+Primero, La Clase: la dimensión teórica en video-lecciones narradas de veinte a treinta minutos, o podcasts nativos.
+Segundo, La Lectura: la entrega de bibliografía mediada. Se destaca el Recurso Libro de Moodle para importar Word conservando tipografías, tablas y colores, junto a documentos PDF, objetos SCORM incrustados o enlaces web.
+Y tercero, La Práctica: autoevaluación formativa mediante trivias gamificadas en SCORM, con opciones múltiples o emparejamiento de conceptos.
+Esta secuencia constante reduce la carga cognitiva, entrena en la interfaz sin estrés para el examen final, y convierte el aprendizaje en un hábito predecible y motivador.

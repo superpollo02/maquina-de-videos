@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    background: #fbfbfd;
+    overflow: hidden;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+  canvas {
+    display: block;
+    width: 1920px;
+    height: 1080px;
+  }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1920" height="1080"></canvas>
+<script>
+window.DUR = 70.35;
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+
+// Load assets
+const logoSello = new Image();
+logoSello.src = '../../sello educai.jpg';
+const logoZocalo = new Image();
+logoZocalo.src = '../../zocalo educai OK.jpg';
+
+let assetsLoaded = 0;
+function checkReady() {
+  assetsLoaded++;
+  if (assetsLoaded >= 2) window.READY = true;
+}
+logoSello.onload = checkReady;
+logoZocalo.onload = checkReady;
+logoSello.onerror = checkReady;
+logoZocalo.onerror = checkReady;
+
+// Ease helper
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+function smoothstep(min, max, value) {
+  let x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  return x * x * (3 - 2 * x);
+}
+
+// Markers & Theme
+const C_DARK = '#1f2a44';
+const C_BLUE = '#0284c7';
+const C_ORANGE = '#ea580c';
+const C_GREEN = '#16a34a';
+const C_GREY = '#64748b';
+
+// Render function: t is current time in seconds
+window.render = function(t) {
+  ctx.clearRect(0, 0, 1920, 1080);
+
+  // 1. Board Background (Subtle glossy whiteboard gradient + frame)
+  let bgGrad = ctx.createLinearGradient(0, 0, 1920, 1080);
+  bgGrad.addColorStop(0, '#ffffff');
+  bgGrad.addColorStop(0.5, '#fcfcfd');
+  bgGrad.addColorStop(1, '#f8fafc');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1920, 1080);
+
+  // Soft glossy whiteboard diagonal reflection
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+  ctx.beginPath();
+  let sheenShift = (t * 15) % 600;
+  ctx.moveTo(sheenShift - 200, 0);
+  ctx.lineTo(sheenShift + 400, 0);
+  ctx.lineTo(sheenShift + 100, 1080);
+  ctx.lineTo(sheenShift - 500, 1080);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Subtle grid/dots for whiteboard texture
+  ctx.save();
+  ctx.fillStyle = 'rgba(148, 163, 184, 0.15)';
+  for (let x = 60; x < 1920; x += 120) {
+    for (let y = 60; y < 1080; y += 120) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
+  // Top Institutional Header (EducAI Watermark/Header)
+  ctx.save();
+  if (logoSello.complete && logoSello.naturalWidth > 0) {
+    ctx.drawImage(logoSello, 80, 45, 80, 80);
+  }
+  ctx.font = 'bold 32px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("EducAI · Arquitectura y Estándar Instruccional", 185, 80);
+  ctx.font = '500 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("MODELO PEDAGÓGICO DE ALTA RETENCIÓN Y PREDICTIBILIDAD", 185, 110);
+  ctx.restore();
+
+  // Draw Camera Flow based on Segments
+  // Seg 1 (0 - 6.0s): El 70% de deserción
+  // Seg 2 (6.0 - 12.0s): Sobrecarga cognitiva
+  // Seg 3 (12.0 - 17.5s): La Estructura Tripartita (título central)
+  // Seg 4 (17.5 - 23.0s): 3 Momentos Consecutivos (visión global)
+  // Seg 5 (23.0 - 33.0s): 1. LA CLASE (zoom/enfoque bloque 1)
+  // Seg 6 (33.0 - 48.5s): 2. LA LECTURA (zoom/enfoque bloque 2)
+  // Seg 7 (48.5 - 59.0s): 3. LA PRÁCTICA (zoom/enfoque bloque 3)
+  // Seg 8 (59.0 - 70.3s): Vista completa del tablero, hábitos y reducción de estrés
+
+  // ----------------------------------------------------
+  // ACTO 1: DIAGNÓSTICO (0 - 12s)
+  // ----------------------------------------------------
+  if (t < 13.5) {
+    let p1 = smoothstep(0.5, 3.5, t);
+    let p2 = smoothstep(6.0, 9.5, t);
+
+    ctx.save();
+    // Card 1: Curva de Abandono 70%
+    ctx.strokeStyle = C_ORANGE;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(180, 260, 680, 440);
+    ctx.fillStyle = 'rgba(234, 88, 12, 0.04)';
+    ctx.fillRect(180, 260, 680, 440);
+
+    ctx.font = 'bold 36px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("Cursos Autoadministrados", 220, 325);
+
+    ctx.font = 'bold 96px "Segoe UI", sans-serif';
+    let countNum = Math.min(70, Math.floor(p1 * 70));
+    ctx.fillText(`${countNum}%`, 220, 440);
+    ctx.font = 'bold 38px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("Tasa de Abandono", 450, 410);
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("Deserción habitual sin estructura predecible", 450, 445);
+
+    // Gráfica de caída
+    ctx.beginPath();
+    ctx.moveTo(220, 620);
+    ctx.bezierCurveTo(360, 615, 480, 560, 780, 640);
+    ctx.strokeStyle = C_ORANGE;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    // Card 2: Carga Cognitiva y desorientación
+    if (p2 > 0) {
+      ctx.globalAlpha = p2;
+      ctx.strokeStyle = C_BLUE;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(960, 260, 780, 440);
+      ctx.fillStyle = 'rgba(2, 132, 199, 0.04)';
+      ctx.fillRect(960, 260, 780, 440);
+
+      ctx.font = 'bold 36px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_BLUE;
+      ctx.fillText("El Estudiante Adulto", 1000, 325);
+
+      ctx.font = '30px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_DARK;
+      ctx.fillText("• Desorientación en la plataforma", 1000, 395);
+      ctx.fillText("• Agotamiento de la energía mental", 1000, 455);
+      ctx.fillText("• Falta de previsibilidad ambiental", 1000, 515);
+
+      ctx.font = 'bold 32px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_ORANGE;
+      ctx.fillText("Causa raíz: La Sobrecarga Cognitiva", 1000, 610);
+    }
+    ctx.restore();
+  }
+
+  // ----------------------------------------------------
+  // ACTO 2 & 3: ESTRUCTURA TRIPARTITA (13.5s en adelante)
+  // ----------------------------------------------------
+  if (t >= 13.0) {
+    let globalAlpha = smoothstep(13.0, 14.5, t);
+    ctx.save();
+    ctx.globalAlpha = globalAlpha;
+
+    // Gran Título Central
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 44px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("ESTRUCTURA TRIPARTITA DEL AULA VIRTUAL", 960, 200);
+    ctx.font = '600 24px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Secuencia secuencial andragógica e invariable en cada unidad temática de Moodle", 960, 240);
+    ctx.textAlign = 'left';
+
+    // Coordenadas de los 3 Bloques
+    const bW = 500;
+    const bH = 580;
+    const bY = 280;
+    const b1X = 140;
+    const b2X = 710;
+    const b3X = 1280;
+
+    // --------------------------------------------------
+    // BLOQUE 1: LA CLASE (t >= 17s, protagonismo 23 - 33s)
+    // --------------------------------------------------
+    let aB1 = smoothstep(16.5, 18.0, t);
+    let isFocus1 = (t >= 22.0 && t < 33.0);
+    ctx.save();
+    ctx.globalAlpha = globalAlpha * aB1;
+    ctx.strokeStyle = isFocus1 ? C_BLUE : '#cbd5e1';
+    ctx.lineWidth = isFocus1 ? 5 : 2;
+    ctx.fillStyle = isFocus1 ? 'rgba(2, 132, 199, 0.05)' : '#ffffff';
+    ctx.strokeRect(b1X, bY, bW, bH);
+    ctx.fillRect(b1X, bY, bW, bH);
+
+    // Badge número
+    ctx.fillStyle = C_BLUE;
+    ctx.beginPath();
+    ctx.arc(b1X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("1", b1X + 43, bY + 58);
+
+    // Título
+    ctx.font = 'bold 34px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("LA CLASE", b1X + 95, bY + 60);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Dimensión Teórica y Audiovisual", b1X + 40, bY + 115);
+
+    // Contenido
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• Espacio central de presentación", b1X + 40, bY + 175);
+    ctx.fillText("• Video-lecciones narradas", b1X + 40, bY + 225);
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("  Máximo 20 a 30 minutos", b1X + 40, bY + 265);
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• Podcasts de audio nativo", b1X + 40, bY + 315);
+    ctx.fillText("• Presentación por el docente", b1X + 40, bY + 365);
+
+    // Icono ilustrativo de video/reproducción dibujado
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(b1X + 170, bY + 420, 160, 100);
+    ctx.beginPath();
+    ctx.moveTo(b1X + 235, bY + 445);
+    ctx.lineTo(b1X + 275, bY + 470);
+    ctx.lineTo(b1X + 235, bY + 495);
+    ctx.closePath();
+    ctx.fillStyle = C_BLUE;
+    ctx.fill();
+    ctx.restore();
+
+    // Flecha de conexión 1 -> 2
+    let arrow1 = smoothstep(18.0, 19.5, t);
+    if (arrow1 > 0) {
+      ctx.save();
+      ctx.globalAlpha = arrow1;
+      ctx.strokeStyle = C_BLUE;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(b1X + bW + 10, bY + bH / 2);
+      ctx.lineTo(b2X - 10, bY + bH / 2);
+      ctx.stroke();
+      // Cabecera flecha
+      ctx.beginPath();
+      ctx.moveTo(b2X - 25, bY + bH / 2 - 12);
+      ctx.lineTo(b2X - 10, bY + bH / 2);
+      ctx.lineTo(b2X - 25, bY + bH / 2 + 12);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --------------------------------------------------
+    // BLOQUE 2: LA LECTURA (t >= 18.5s, protagonismo 33 - 48.5s)
+    // --------------------------------------------------
+    let aB2 = smoothstep(18.5, 20.0, t);
+    let isFocus2 = (t >= 33.0 && t < 48.5);
+    ctx.save();
+    ctx.globalAlpha = globalAlpha * aB2;
+    ctx.strokeStyle = isFocus2 ? C_BLUE : '#cbd5e1';
+    ctx.lineWidth = isFocus2 ? 5 : 2;
+    ctx.fillStyle = isFocus2 ? 'rgba(2, 132, 199, 0.05)' : '#ffffff';
+    ctx.strokeRect(b2X, bY, bW, bH);
+    ctx.fillRect(b2X, bY, bW, bH);
+
+    // Badge número
+    ctx.fillStyle = C_BLUE;
+    ctx.beginPath();
+    ctx.arc(b2X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("2", b2X + 43, bY + 58);
+
+    // Título
+    ctx.font = 'bold 34px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("LA LECTURA", b2X + 95, bY + 60);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Dimensión de Profundización", b2X + 40, bY + 115);
+
+    // Contenido
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREEN;
+    ctx.fillText("★ Recurso Libro en Moodle", b2X + 40, bY + 170);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("  Importación Word: estilos, tablas y color", b2X + 40, bY + 205);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• Páginas nativas y carpetas PDF", b2X + 40, bY + 260);
+    ctx.fillText("• Documentos SCORM e incrustados", b2X + 40, bY + 310);
+    ctx.fillText("• Archivos HTML integrados", b2X + 40, bY + 360);
+    ctx.fillText("• Enlaces web y visualización online", b2X + 40, bY + 410);
+
+    // Icono libro abierto
+    ctx.strokeStyle = C_GREEN;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(b2X + 250, bY + 460);
+    ctx.lineTo(b2X + 200, bY + 475);
+    ctx.lineTo(b2X + 200, bY + 530);
+    ctx.lineTo(b2X + 250, bY + 515);
+    ctx.lineTo(b2X + 300, bY + 530);
+    ctx.lineTo(b2X + 300, bY + 475);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(b2X + 250, bY + 460);
+    ctx.lineTo(b2X + 250, bY + 515);
+    ctx.stroke();
+    ctx.restore();
+
+    // Flecha de conexión 2 -> 3
+    let arrow2 = smoothstep(20.0, 21.5, t);
+    if (arrow2 > 0) {
+      ctx.save();
+      ctx.globalAlpha = arrow2;
+      ctx.strokeStyle = C_BLUE;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(b2X + bW + 10, bY + bH / 2);
+      ctx.lineTo(b3X - 10, bY + bH / 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(b3X - 25, bY + bH / 2 - 12);
+      ctx.lineTo(b3X - 10, bY + bH / 2);
+      ctx.lineTo(b3X - 25, bY + bH / 2 + 12);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --------------------------------------------------
+    // BLOQUE 3: LA PRÁCTICA (t >= 20.5s, protagonismo 48.5 - 59s)
+    // --------------------------------------------------
+    let aB3 = smoothstep(20.5, 22.0, t);
+    let isFocus3 = (t >= 48.5 && t < 59.0);
+    ctx.save();
+    ctx.globalAlpha = globalAlpha * aB3;
+    ctx.strokeStyle = isFocus3 ? C_ORANGE : '#cbd5e1';
+    ctx.lineWidth = isFocus3 ? 5 : 2;
+    ctx.fillStyle = isFocus3 ? 'rgba(234, 88, 12, 0.05)' : '#ffffff';
+    ctx.strokeRect(b3X, bY, bW, bH);
+    ctx.fillRect(b3X, bY, bW, bH);
+
+    // Badge número
+    ctx.fillStyle = C_ORANGE;
+    ctx.beginPath();
+    ctx.arc(b3X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("3", b3X + 43, bY + 58);
+
+    // Título
+    ctx.font = 'bold 34px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("LA PRÁCTICA", b3X + 95, bY + 60);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("Aplicación y Autoevaluación Formativa", b3X + 40, bY + 115);
+
+    // Contenido
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("1) Cuestionarios Gamificados:", b3X + 40, bY + 175);
+    ctx.font = '20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   • Opción múltiple (4 opciones)", b3X + 40, bY + 215);
+    ctx.fillText("   • Verdadero / Falso en SCORM", b3X + 40, bY + 255);
+
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("2) Conectar Bloques:", b3X + 40, bY + 315);
+    ctx.font = '20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   • Emparejamiento concepto-significado", b3X + 40, bY + 355);
+
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("Objetivo: Cero Estrés", b3X + 40, bY + 415);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("Entrenamiento previo al examen final sumativo", b3X + 40, bY + 450);
+
+    // Icono de medalla / trofeo
+    ctx.strokeStyle = C_ORANGE;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(b3X + 215, bY + 480, 70, 45);
+    ctx.beginPath();
+    ctx.arc(b3X + 250, bY + 480, 20, Math.PI, 0);
+    ctx.stroke();
+    ctx.restore();
+
+    // --------------------------------------------------
+    // PIE DE IMPACTO ANDRAGÓGICO (59s a 70.3s)
+    // --------------------------------------------------
+    let aImpact = smoothstep(58.5, 61.0, t);
+    if (aImpact > 0) {
+      ctx.save();
+      ctx.globalAlpha = globalAlpha * aImpact;
+      ctx.fillStyle = 'rgba(31, 42, 68, 0.95)';
+      ctx.fillRect(140, 890, 1640, 110);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 26px "Segoe UI", sans-serif';
+      ctx.fillText("IMPACTO ANDRAGÓGICO COMPROBADO:", 180, 935);
+
+      ctx.font = '22px "Segoe UI", sans-serif';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText("✔ Reduce la Carga Cognitiva", 180, 975);
+      ctx.fillStyle = '#4ade80';
+      ctx.fillText("✔ Predictibilidad Ambiental", 620, 975);
+      ctx.fillStyle = '#fb923c';
+      ctx.fillText("✔ Mitiga el Abandono (Hitos Parciales)", 1050, 975);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  // Subtitles Banner at the bottom
+  drawSubtitles(t);
+};
+
+// Subtitles renderer
+const subs = [
+  { start: 0.0, end: 6.0, text: "En cursos virtuales autoadministrados, el abandono suele rondar el 70%." },
+  { start: 6.0, end: 12.0, text: "Para el estudiante adulto, la desorientación en la plataforma agota su energía mental." },
+  { start: 12.0, end: 17.5, text: "La solución es la predictibilidad ambiental: la Estructura Tripartita del aula." },
+  { start: 17.5, end: 23.0, text: "Cada unidad didáctica se organiza estrictamente en tres momentos consecutivos." },
+  { start: 23.0, end: 33.0, text: "Primero, La Clase: la dimensión teórica y audiovisual (video-lecciones de 20 a 30 min o podcasts)." },
+  { start: 33.0, end: 48.5, text: "Segundo, La Lectura: bibliografía mediada. Destaca el Recurso Libro (Word), PDFs, SCORM y enlaces web." },
+  { start: 48.5, end: 59.0, text: "Y tercero, La Práctica: aplicación y autoevaluación formativa con trivias gamificadas en SCORM." },
+  { start: 59.0, end: 70.35, text: "Esta secuencia constante reduce la carga cognitiva y convierte el aprendizaje en un hábito previsible." }
+];
+
+function drawSubtitles(t) {
+  let active = subs.find(s => t >= s.start && t < s.end);
+  if (!active) return;
+
+  ctx.save();
+  ctx.font = '600 24px "Segoe UI", sans-serif';
+  let textWidth = ctx.measureText(active.text).width;
+  let boxW = textWidth + 60;
+  let boxH = 50;
+  let boxX = (1920 - boxW) / 2;
+  let boxY = 1015;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  ctx.beginPath();
+  ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+  ctx.fill();
+
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(active.text, 1920 / 2, boxY + 34);
+  ctx.restore();
+}
+</script>
+</body>
+</html>

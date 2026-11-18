@@ -1,0 +1,53 @@
+{
+  "total": 70.696,
+  "segments": [
+    {
+      "file": "films/estructura-tripartita\\seg_01.mp3",
+      "start": 0.0,
+      "duration": 6.048,
+      "end": 6.048
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_02.mp3",
+      "start": 6.398,
+      "duration": 5.688,
+      "end": 12.086
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_03.mp3",
+      "start": 12.436,
+      "duration": 5.328,
+      "end": 17.764
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_04.mp3",
+      "start": 18.114,
+      "duration": 5.136,
+      "end": 23.25
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_05.mp3",
+      "start": 23.6,
+      "duration": 9.408,
+      "end": 33.008
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_06.mp3",
+      "start": 33.358,
+      "duration": 15.336,
+      "end": 48.694
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_07.mp3",
+      "start": 49.044,
+      "duration": 10.248,
+      "end": 59.292
+    },
+    {
+      "file": "films/estructura-tripartita\\seg_08.mp3",
+      "start": 59.642,
+      "duration": 10.704,
+      "end": 70.346
+    }
+  ]
+}
