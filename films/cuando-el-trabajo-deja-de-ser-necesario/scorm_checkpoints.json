@@ -1,0 +1,58 @@
+[
+  {
+    "scene_id": "scene_02",
+    "timestamp": 96.6,
+    "question": "Según el análisis de Richard Sennett en 'La corrosión del carácter', ¿cuál es el principal impacto subjetivo de sustituir la experiencia acumulada por la flexibilidad permanente?",
+    "options": [
+      "Un aumento sostenido en la satisfacción psicológica del trabajador al cambiar de tareas frecuentemente.",
+      "La dificultad de construir una narrativa biográfica coherente y la fragmentación del carácter al volverse discontinuas las trayectorias.",
+      "La erradicación automática de las brechas de género en las organizaciones flexibles.",
+      "Una desaceleración en la velocidad de actualización de las herramientas tecnológicas."
+    ],
+    "correct_index": 1,
+    "feedback_ok": "¡Exacto! Sennett demuestra que la estabilidad y el tiempo largo permitían tejer una historia personal con sentido. La flexibilidad continua pulveriza esa continuidad biográfica y desgasta el carácter.",
+    "feedback_error": "Incorrecto. Para Sennett, el problema central del capitalismo flexible no es operativo sino existencial: al fragmentar las trayectorias, impide que el trabajador construya un relato coherente de su vida."
+  },
+  {
+    "scene_id": "scene_04",
+    "timestamp": 214.1,
+    "question": "A partir de la tesis de Yuval Noah Harari en 'Nexus', ¿en qué consiste la 'alienación cognitiva' que experimentan profesionales como médicos o abogados al utilizar IA?",
+    "options": [
+      "En la pérdida de acceso físico a sus lugares de trabajo por fallas en las redes eléctricas.",
+      "En que deben programar personalmente el código fuente de los algoritmos que utilizan.",
+      "En conservar la responsabilidad legal y ética del diagnóstico o dictamen, mientras que el criterio y el procesamiento se delegan a un sistema opaco que no controlan plenamente.",
+      "En una disminución obligatoria de sus salarios fijada por las plataformas de software."
+    ],
+    "correct_index": 2,
+    "feedback_ok": "¡Respuesta impecable! La alienación cognitiva se produce precisamente por esa asimetría: el profesional debe responder civil y penalmente por decisiones cuyo proceso interno desconoce al operar la IA como una caja negra.",
+    "feedback_error": "Incorrecto. Harari explica que la alienación cognitiva ocurre porque el profesional retiene la carga de la responsabilidad ante la ley y la sociedad, pero delega el criterio analítico a un sistema informacional opaco."
+  },
+  {
+    "scene_id": "scene_05",
+    "timestamp": 272.0,
+    "question": "¿Por qué las propuestas de Ingreso Básico Universal (RBU) no son suficientes por sí solas para resolver la crisis social provocada por la automatización del trabajo?",
+    "options": [
+      "Porque los bancos comerciales rechazan las transferencias automáticas a ciudadanos desocupados.",
+      "Porque aunque garantizan la subsistencia económica y sostienen el consumo, no resuelven la pérdida de reconocimiento, lazos comunitarios y sentido de vida que brindaba el trabajo.",
+      "Porque impiden el desarrollo de nuevas herramientas de inteligencia artificial en las universidades.",
+      "Porque reducen drásticamente la recaudación impositiva en todos los países desarrollados."
+    ],
+    "correct_index": 1,
+    "feedback_ok": "¡Totalmente acertado! El RBU soluciona el piso material y evita la indigencia, pero no suple la función ordenadora, comunitaria y existencial que la sociedad moderna depositó durante siglos en el trabajo.",
+    "feedback_error": "No es correcto. El problema no es financiero ni técnico: radica en que el dinero resuelve la cuenta corriente, pero no brinda por sí solo una respuesta a las preguntas existenciales sobre el propósito y la identidad personal."
+  },
+  {
+    "scene_id": "scene_07",
+    "timestamp": 389.7,
+    "question": "Al articular las perspectivas de Sennett, Han y Harari, ¿cuál es la misión pedagógica primordial que debe asumir la educación ante el avance de la inteligencia artificial?",
+    "options": [
+      "Entrenar a los estudiantes en técnicas de memorización para competir con la capacidad de los discos rígidos.",
+      "Enfocar el aula en la construcción de juicio crítico, deliberación ética y lazos comunitarios, superando la simple preparación técnica para un mercado asalariado en transformación.",
+      "Reemplazar todas las asignaturas humanísticas por cursos obligatorios de programación en ensamblador.",
+      "Delegar completamente el diseño de los programas de estudio a modelos predictivos sin intervención docente."
+    ],
+    "correct_index": 1,
+    "feedback_ok": "¡Conclusión magistral! Competir con la IA en procesamiento u operatividad es absurdo. La misión educativa de fondo es cultivar lo irreductiblemente humano: el pensamiento crítico, la ética, el afecto y la capacidad de construir sentido colectivo.",
+    "feedback_error": "Incorrecto. Frente a máquinas que procesan y redactan a velocidad sobrehumana, la educación no puede pretender competir en rendimiento operario. Debe refundarse como un espacio para el juicio ético, el pensamiento crítico y la construcción de sentido."
+  }
+]

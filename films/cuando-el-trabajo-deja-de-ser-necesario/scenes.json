@@ -1,0 +1,369 @@
+{
+  "project_metadata": {
+    "project_id": "cuando-el-trabajo-deja-de-ser-necesario",
+    "course_title": "Cuando el trabajo deja de ser necesario",
+    "subtitle": "Inteligencia artificial, identidad y sociedad",
+    "source_document": "films/cuando-el-trabajo-deja-de-ser-necesario/source_text.txt",
+    "pedagogical_framework": "EducAI · Andragogía y Estructura Tripartita (La Clase, La Lectura, La Práctica)",
+    "authors_dialogue": [
+      "Richard Sennett (La corrosión del carácter / El artesano)",
+      "Byung-Chul Han (La sociedad del cansancio)",
+      "Yuval Noah Harari (Nexus)",
+      "Ready Player One (Escenario especulativo / Ernest Cline)"
+    ],
+    "target_audience": "Docentes, profesionales, estudiantes universitarios y adultos en formación continua",
+    "voice_profile": {
+      "language": "es-AR",
+      "voice_name": "es-AR-ElenaNeural",
+      "style": "Oral rioplatense conversacional, cálido, fluido, sin jerga artificial, directo y pedagógico",
+      "pacing_wpm": 135
+    },
+    "total_scenes": 7,
+    "total_estimated_duration_seconds": 441,
+    "total_words": 995
+  },
+  "scenes": [
+    {
+      "scene_id": "scene_01",
+      "order": 1,
+      "title": "El trabajo como ordenador de la existencia",
+      "duration_seconds": 63,
+      "word_count": 142,
+      "voiceover_script": "Fijate qué pasa cuando conocés a alguien nuevo. Casi siempre, la segunda pregunta después del nombre es: ¿a qué te dedicás? Durante más de dos siglos, el trabajo asalariado fue mucho más que una forma de ganar plata. Fue la institución que ordenó nuestro horario diario, nuestros vínculos, el reconocimiento de los demás y, sobre todo, la respuesta a la pregunta '¿quién soy?'. Cuando discutimos sobre inteligencia artificial, solemos quedarnos en la superficie: cuántos empleos se van a perder o qué tareas se van a automatizar. Pero el quiebre profundo es otro. La IA no solo cambia la cantidad de puestos; pone en jaque la relación histórica entre trabajo, identidad y sentido de la vida. Si la necesidad de trabajar empieza a reducirse drásticamente, lo que entra en crisis es la forma en que organizamos nuestra sociedad.",
+      "screen_elements": {
+        "header_title": "EL TRABAJO COMO EJE DE IDENTIDAD",
+        "category_badge": "01 / INTRODUCCIÓN Y CONTEXTO",
+        "bullet_points": [
+          "El trabajo asalariado como ordenador central de la vida moderna",
+          "Mucho más que ingreso: Rutina, vínculos, estatus y reconocimiento",
+          "El límite de la discusión actual: No es solo cuántos empleos se pierden",
+          "La pregunta existencial: ¿Qué sostiene la identidad cuando el trabajo deja de ser central?"
+        ],
+        "diagram": {
+          "type": "radial_concept_map",
+          "title": "Las Cuatro Funciones Sociales del Trabajo Moderno",
+          "center": "Trabajo Asalariado",
+          "nodes": [
+            { "id": "p1", "label": "Estructura Temporal", "desc": "Rutina diaria, semanas y horizontes vitales" },
+            { "id": "p2", "label": "Lazos Sociales", "desc": "Pertenencia grupal y comunidad de pares" },
+            { "id": "p3", "label": "Reconocimiento", "desc": "Estatus público y valoración social" },
+            { "id": "p4", "label": "Identidad Personal", "desc": "Respuesta a la pregunta '¿Quién soy?'" }
+          ]
+        },
+        "callout_quote": "La pregunta '¿a qué te dedicás?' no es un dato económico: sitúa al individuo en la sociedad."
+      },
+      "checkpoints": []
+    },
+    {
+      "scene_id": "scene_02",
+      "order": 2,
+      "title": "De la estabilidad a la flexibilidad: Richard Sennett",
+      "duration_seconds": 61,
+      "word_count": 137,
+      "voiceover_script": "Para entender cómo llegamos acá, miremos la historia. En la era industrial, el trabajo te daba una historia de vida clara: empezabas como aprendiz, sumabas experiencia, dominabas un oficio, te reconocían y te jubilabas. Había una narrativa biográfica previsible. Pero en las últimas décadas, como explica el sociólogo Richard Sennett en La corrosión del carácter, ese esquema se rompió con la llegada del capitalismo flexible. De golpe, tener experiencia acumulada dejó de ser un valor y pasó a ser un riesgo de obsolescencia. La pregunta del mercado ya no es '¿qué sabés hacer?', sino '¿qué podés aprender rápido a hacer ahora?'. Sennett advierte que cuando las trayectorias se vuelven tan discontinuas y descartables, al trabajador le cuesta horrores construir un relato coherente de su propia vida, y el carácter se corroe.",
+      "screen_elements": {
+        "header_title": "DE LA ESTABILIDAD A LA FLEXIBILIDAD",
+        "category_badge": "02 / RICHARD SENNETT: LA CORROSIÓN DEL CARÁCTER",
+        "bullet_points": [
+          "La narrativa biográfica tradicional: Aprendizaje → Experiencia → Oficio → Reconocimiento → Jubilación",
+          "El quiebre del capitalismo flexible: Trayectorias discontinuas y proyectos a corto plazo",
+          "El cambio de mandato: De '¿qué sé hacer?' a '¿qué puedo aprender ahora?'",
+          "La tesis de Sennett: Sin estabilidad temporal, el carácter personal se fragmenta"
+        ],
+        "diagram": {
+          "type": "timeline_comparison",
+          "title": "Evolución de la Trayectoria Laboral",
+          "stages_traditional": [
+            { "stage": "Aprendizaje", "icon": "book" },
+            { "stage": "Experiencia acumulada", "icon": "tools" },
+            { "stage": "Oficio / Maestría", "icon": "award" },
+            { "stage": "Reconocimiento", "icon": "users" },
+            { "stage": "Jubilación", "icon": "anchor" }
+          ],
+          "stages_flexible": [
+            { "stage": "Contratos cortos", "icon": "shuffle" },
+            { "stage": "Obsolescencia de habilidades", "icon": "alert" },
+            { "stage": "Reinvención obligatoria", "icon": "refresh" },
+            { "stage": "Narrativa fragmentada", "icon": "split" }
+          ]
+        },
+        "callout_quote": "La experiencia acumulada cede su lugar a la exigencia de adaptación permanente."
+      },
+      "checkpoints": [
+        {
+          "checkpoint_id": "chk_01",
+          "timestamp_relative": 56.0,
+          "question": "Según el análisis de Richard Sennett en 'La corrosión del carácter', ¿cuál es el principal impacto subjetivo de sustituir la experiencia acumulada por la flexibilidad permanente?",
+          "options": [
+            "Un aumento sostenido en la satisfacción psicológica del trabajador al cambiar de tareas frecuentemente.",
+            "La dificultad de construir una narrativa biográfica coherente y la fragmentación del carácter al volverse discontinuas las trayectorias.",
+            "La erradicación automática de las brechas de género en las organizaciones flexibles.",
+            "Una desaceleración en la velocidad de actualización de las herramientas tecnológicas."
+          ],
+          "correct_index": 1,
+          "feedback_ok": "¡Exacto! Sennett demuestra que la estabilidad y el tiempo largo permitían tejer una historia personal con sentido. La flexibilidad continua pulveriza esa continuidad biográfica y desgasta el carácter.",
+          "feedback_error": "Incorrecto. Para Sennett, el problema central del capitalismo flexible no es operativo sino existencial: al fragmentar las trayectorias, impide que el trabajador construya un relato coherente de su vida."
+        }
+      ]
+    },
+    {
+      "scene_id": "scene_03",
+      "order": 3,
+      "title": "El sujeto del rendimiento: Byung-Chul Han",
+      "duration_seconds": 63,
+      "word_count": 142,
+      "voiceover_script": "Acá entra la mirada de Byung-Chul Han en La sociedad del cansancio. Antes, la disciplina venía de afuera: un jefe, un horario fijo, una orden explícita. Hoy nos creemos libres porque somos empresarios de nosotros mismos. Pero esa libertad aparente es una trampa: el mandato interno de optimizarnos, capacitarnos y no quedarnos afuera nos lleva a la autoexplotación voluntaria. Y con la inteligencia artificial esto se agrava. Pensá en esto: si una herramienta te permite armar un informe en una hora en vez de cuatro, ¿qué pasa con las tres horas que te sobran? Ni la empresa ni vos las usan para descansar. Las usan para hacer tres informes más. Mayor capacidad técnica genera mayores expectativas, y más expectativas generan mayor presión. La tecnología prometía liberarnos del esfuerzo, pero terminó multiplicando la exigencia de rendimiento.",
+      "screen_elements": {
+        "header_title": "EL SUJETO DEL RENDIMIENTO",
+        "category_badge": "03 / BYUNG-CHUL HAN: LA SOCIEDAD DEL CANSANCIO",
+        "bullet_points": [
+          "De la sociedad disciplinaria ('tú debes') a la sociedad del rendimiento ('tú puedes')",
+          "El trabajador como empresario de sí mismo: Autoexplotación bajo la máscara de la libertad",
+          "La paradoja de la IA: Mayor velocidad no reduce la jornada laboral",
+          "El circuito de la presión: Capacidad técnica → Productividad → Expectativas → Burnout"
+        ],
+        "diagram": {
+          "type": "loop_diagram",
+          "title": "La Espiral de Rendimiento en la Era de la IA",
+          "steps": [
+            { "step": "1. Herramienta IA", "desc": "Reduce a la cuarta parte el tiempo de una tarea" },
+            { "step": "2. Nueva Norma", "desc": "La rapidez pasa a ser el estándar mínimo esperado" },
+            { "step": "3. Demanda Multiplicada", "desc": "Se asignan más tareas en el tiempo liberado" },
+            { "step": "4. Agotamiento Psíquico", "desc": "Autoexplotación y miedo a quedarse atrás (FOMO)" }
+          ]
+        },
+        "callout_quote": "La tecnología prometía reducir la jornada; terminó multiplicando las expectativas de rendimiento."
+      },
+      "checkpoints": []
+    },
+    {
+      "scene_id": "scene_04",
+      "order": 4,
+      "title": "La IA como Inteligencia Ajena: Yuval Noah Harari",
+      "duration_seconds": 62,
+      "word_count": 139,
+      "voiceover_script": "Hay una diferencia fundamental entre la IA y cualquier máquina del pasado. Una grúa multiplica la fuerza; una computadora tradicional acelera el cálculo numérico. Pero la inteligencia artificial interviene directamente en el contenido cognitivo del trabajo: procesa información, formula hipótesis, redacta alternativas y toma decisiones. Como señala Yuval Noah Harari en Nexus, no estamos frente a una herramienta pasiva, sino frente a una inteligencia ajena. Un sistema que opera como una caja negra opaca, procesando datos a una velocidad y escala que el cerebro humano no puede fiscalizar. Y esto crea una paradoja peligrosa: la alienación cognitiva. El médico, el abogado o el directivo le delegan el criterio analítico al algoritmo, pero la responsabilidad ética y legal sigue siendo enteramente humana. Conservamos la culpa, pero perdimos el control del proceso de decisión.",
+      "screen_elements": {
+        "header_title": "LA IA COMO INTELIGENCIA AJENA",
+        "category_badge": "04 / YUVAL NOAH HARARI: NEXUS Y LA CAJA NEGRA",
+        "bullet_points": [
+          "Herramientas tradicionales: Amplían el músculo o la velocidad de cómputo",
+          "Inteligencia Artificial: Interviene activamente en el juicio y la toma de decisiones",
+          "Tesis Nexus: Redes informacionales opacas que operan como cajas negras",
+          "Alienación cognitiva: El criterio se delega al algoritmo, pero la responsabilidad sigue siendo humana"
+        ],
+        "diagram": {
+          "type": "tripartite_flow",
+          "title": "Transformación del Proceso Decisional",
+          "before": {
+            "title": "Herramienta Clásica",
+            "flow": "Humano ──► Herramienta transparente ──► Resultado propio"
+          },
+          "after": {
+            "title": "Sistemas IA (Nexus)",
+            "flow": "Humano ──► Caja Negra Algorítmica ──► Decisión sugerida ──► Responsabilidad legal humana",
+            "highlight": "Alienación Cognitiva"
+          }
+        },
+        "callout_quote": "La inteligencia se delega a la máquina, pero la responsabilidad continúa siendo humana."
+      },
+      "checkpoints": [
+        {
+          "checkpoint_id": "chk_02",
+          "timestamp_relative": 57.0,
+          "question": "A partir de la tesis de Yuval Noah Harari en 'Nexus', ¿en qué consiste la 'alienación cognitiva' que experimentan profesionales como médicos o abogados al utilizar IA?",
+          "options": [
+            "En la pérdida de acceso físico a sus lugares de trabajo por fallas en las redes eléctricas.",
+            "En que deben programar personalmente el código fuente de los algoritmos que utilizan.",
+            "En conservar la responsabilidad legal y ética del diagnóstico o dictamen, mientras que el criterio y el procesamiento se delegan a un sistema opaco que no controlan plenamente.",
+            "En una disminución obligatoria de sus salarios fijada por las plataformas de software."
+          ],
+          "correct_index": 2,
+          "feedback_ok": "¡Respuesta impecable! La alienación cognitiva se produce precisamente por esa asimetría: el profesional debe responder civil y penalmente por decisiones cuyo proceso interno desconoce al operar la IA como una caja negra.",
+          "feedback_error": "Incorrecto. Harari explica que la alienación cognitiva ocurre porque el profesional retiene la carga de la responsabilidad ante la ley y la sociedad, pero delega el criterio analítico a un sistema informacional opaco."
+        }
+      ]
+    },
+    {
+      "scene_id": "scene_05",
+      "order": 5,
+      "title": "La paradoja del capitalismo automatizado",
+      "duration_seconds": 64,
+      "word_count": 145,
+      "voiceover_script": "Cuando sumás inteligencia artificial a la robótica avanzada, llegamos a un escenario inédito: la producción de bienes y servicios necesita cada vez menos laburo humano. La cadena histórica que sostenía a la sociedad moderna era lineal: trabajo, salario, consumo e integración social. Si rompés el primer eslabón, todo el engranaje cruje. Acá surge la gran paradoja del capitalismo automatizado: el individuo deja de ser necesario como productor, pero sigue siendo imprescindible como consumidor para que las empresas no quiebren. De ahí que economistas y tecnólogos propongan un ingreso básico universal para desacoplar el dinero del empleo. Es una medida clave para garantizar techo y comida, sin dudas. Pero resolver la billetera no resuelve el problema de fondo: el ingreso universal te garantiza la subsistencia material, pero no te dice qué hacer con tu vida ni quién sos.",
+      "screen_elements": {
+        "header_title": "LA PARADOJA DEL CAPITALISMO AUTOMATIZADO",
+        "category_badge": "05 / ECONOMÍA POLÍTICA Y SUBSISTENCIA",
+        "bullet_points": [
+          "Automatización integral: Fusión de robótica física y algoritmos cognitivos",
+          "Ruptura de la cadena histórica: Trabajo → Salario → Consumo → Integración social",
+          "La contradicción central: Innecesario como trabajador, indispensable como consumidor",
+          "El alcance del Ingreso Básico Universal: Sostiene el consumo, pero no genera identidad"
+        ],
+        "diagram": {
+          "type": "broken_chain",
+          "title": "La Fractura de la Integración Social Moderna",
+          "links": [
+            { "name": "Trabajo Humano", "status": "Roto / Prescindible" },
+            { "name": "Salario", "status": "Inyectado por RBU" },
+            { "name": "Consumo de Bienes", "status": "Sostenido artificialmente" },
+            { "name": "Integración e Identidad", "status": "En crisis ontológica" }
+          ]
+        },
+        "callout_quote": "El subsidio resuelve la subsistencia material; el sentido y la identidad quedan vacantes."
+      },
+      "checkpoints": [
+        {
+          "checkpoint_id": "chk_03",
+          "timestamp_relative": 59.0,
+          "question": "¿Por qué las propuestas de Ingreso Básico Universal (RBU) no son suficientes por sí solas para resolver la crisis social provocada por la automatización del trabajo?",
+          "options": [
+            "Porque los bancos comerciales rechazan las transferencias automáticas a ciudadanos desocupados.",
+            "Porque aunque garantizan la subsistencia económica y sostienen el consumo, no resuelven la pérdida de reconocimiento, lazos comunitarios y sentido de vida que brindaba el trabajo.",
+            "Porque impiden el desarrollo de nuevas herramientas de inteligencia artificial en las universidades.",
+            "Porque reducen drásticamente la recaudación impositiva en todos los países desarrollados."
+          ],
+          "correct_index": 1,
+          "feedback_ok": "¡Totalmente acertado! El RBU soluciona el piso material y evita la indigencia, pero no suple la función ordenadora, comunitaria y existencial que la sociedad moderna depositó durante siglos en el trabajo.",
+          "feedback_error": "No es correcto. El problema no es financiero ni técnico: radica en que el dinero resuelve la cuenta corriente, pero no brinda por sí solo una respuesta a las preguntas existenciales sobre el propósito y la identidad personal."
+        }
+      ]
+    },
+    {
+      "scene_id": "scene_06",
+      "order": 6,
+      "title": "Ready Player One y el Homo Virtualis",
+      "duration_seconds": 63,
+      "word_count": 142,
+      "voiceover_script": "Para visualizar hacia dónde puede derivar esta fractura, la película Ready Player One funciona como una advertencia perfecta. En ese futuro, el mundo físico está colapsado: la gente vive en pilas de contenedores, sin empleo digno ni horizontes de progreso. ¿Qué hace la sociedad? Se muda en masa al OASIS, un metaverso inmersivo. Ahí estudian, compran ítems, se enamoran y compiten por reconocimiento. Estamos viendo una transición antropológica profunda. Pasamos del Homo laborans, cuya identidad se definía por lo que producía, al Homo consumens, definido por lo que compraba. Y ahora nos asomamos al Homo virtualis: un sujeto que busca su estatus y su validación social en mundos digitales mientras su entorno material se deteriora. El entretenimiento inmersivo se convierte así en un analgésico social para administrar una realidad donde el trabajo ya no integra.",
+      "screen_elements": {
+        "header_title": "READY PLAYER ONE: EL HOMO VIRTUALIS",
+        "category_badge": "06 / ESCENARIO ESPECULATIVO",
+        "bullet_points": [
+          "El mundo material de Ready Player One: Torres de contenedores y desempleo estructural",
+          "El OASIS como refugio: La vida, el afecto y la economía se mudan a la simulación",
+          "Transición antropológica: Homo laborans → Homo consumens → Homo virtualis",
+          "La simulación como analgésico: Pacificación y monetización de una población sin futuro real"
+        ],
+        "diagram": {
+          "type": "evolution_steps",
+          "title": "Las Tres Fases de la Identidad Contemporánea",
+          "steps": [
+            { "era": "Homo Laborans", "focus": "Producción y Oficio", "context": "Sociedad Industrial" },
+            { "era": "Homo Consumens", "focus": "Capacidad de Compra y Marca", "context": "Sociedad de Consumo" },
+            { "era": "Homo Virtualis", "focus": "Avatares, Skins y Estatus Digital", "context": "Sociedad de Plataformas / OASIS" }
+          ]
+        },
+        "callout_quote": "Cuando el entorno físico no ofrece futuro, la simulación se convierte en el único refugio accesible."
+      },
+      "checkpoints": []
+    },
+    {
+      "scene_id": "scene_07",
+      "order": 7,
+      "title": "Del cansancio al vacío: Reclamar la pregunta",
+      "duration_seconds": 65,
+      "word_count": 148,
+      "voiceover_script": "Llegamos al cruce de caminos. Si unimos las tres miradas, el mapa es contundente: Richard Sennett mostró cómo la inestabilidad corroe el carácter; Byung-Chul Han demostró cómo el rendimiento nos lleva al cansancio crónico; y la automatización avanzada nos sitúa ante un riesgo todavía más hondo: el vacío de sentido. Durante siglos, el trabajo respondía a preguntas fundamentales: quién soy, qué lugar ocupo en mi comunidad, qué le aporto al resto y cómo ordeno mis mañanas. Si la inteligencia artificial nos releva de esas tareas, el gran desafío de la educación y de la sociedad no es intentar competir con la velocidad de los algoritmos. Es aprender a construir valor humano, pensamiento crítico y lazos comunitarios por fuera del mercado asalariado. La pregunta final no es cuántos empleos van a desaparecer, sino quiénes vamos a ser cuando trabajar ya no sea lo que nos defina.",
+      "screen_elements": {
+        "header_title": "DEL CANSANCIO AL VACÍO: EL RETO EXISTENCIAL",
+        "category_badge": "07 / SÍNTESIS PEDAGÓGICA Y FUTURO",
+        "bullet_points": [
+          "Inestabilidad (Sennett) → Corrosión del carácter",
+          "Sobreexigencia (Han) → Cansancio y autoexplotación",
+          "Automatización cognitiva (Harari) → Posible vacío de sentido",
+          "El rol de EducAI: Forjar pensamiento crítico, deliberación ética y vínculos humanos"
+        ],
+        "diagram": {
+          "type": "triangular_synthesis",
+          "title": "La Triangulación Crítica del Presente",
+          "vertices": [
+            { "author": "Richard Sennett", "concept": "Inestabilidad Laboral", "effect": "Corrosión del Carácter" },
+            { "author": "Byung-Chul Han", "concept": "Autoexplotación y Rendimiento", "effect": "Cansancio Crónico" },
+            { "author": "Yuval Noah Harari", "concept": "Automatización e IA (Nexus)", "effect": "Alienación y Vacío de Sentido" }
+          ],
+          "core_challenge": "Reclamar la Agencia Humana: ¿Quiénes seremos sin el empleo como eje?"
+        },
+        "callout_quote": "La tecnología automatiza respuestas; educar es volver a hacernos cargo de las preguntas."
+      },
+      "checkpoints": [
+        {
+          "checkpoint_id": "chk_04",
+          "timestamp_relative": 58.0,
+          "question": "Al articular las perspectivas de Sennett, Han y Harari, ¿cuál es la misión pedagógica primordial que debe asumir la educación ante el avance de la inteligencia artificial?",
+          "options": [
+            "Entrenar a los estudiantes en técnicas de memorización para competir con la capacidad de los discos rígidos.",
+            "Enfocar el aula en la construcción de juicio crítico, deliberación ética y lazos comunitarios, superando la simple preparación técnica para un mercado asalariado en transformación.",
+            "Reemplazar todas las asignaturas humanísticas por cursos obligatorios de programación en ensamblador.",
+            "Delegar completamente el diseño de los programas de estudio a modelos predictivos sin intervención docente."
+          ],
+          "correct_index": 1,
+          "feedback_ok": "¡Conclusión magistral! Competir con la IA en procesamiento u operatividad es absurdo. La misión educativa de fondo es cultivar lo irreductiblemente humano: el pensamiento crítico, la ética, el afecto y la capacidad de construir sentido colectivo.",
+          "feedback_error": "Incorrecto. Frente a máquinas que procesan y redactan a velocidad sobrehumana, la educación no puede pretender competir en rendimiento operario. Debe refundarse como un espacio para el juicio ético, el pensamiento crítico y la construcción de sentido."
+        }
+      ]
+    }
+  ],
+  "scorm_global_checkpoints": [
+    {
+      "checkpoint_id": "chk_01",
+      "scene_id": "scene_02",
+      "global_timestamp_seconds": 120.0,
+      "question": "Según el análisis de Richard Sennett en 'La corrosión del carácter', ¿cuál es el principal impacto subjetivo de sustituir la experiencia acumulada por la flexibilidad permanente?",
+      "options": [
+        "Un aumento sostenido en la satisfacción psicológica del trabajador al cambiar de tareas frecuentemente.",
+        "La dificultad de construir una narrativa biográfica coherente y la fragmentación del carácter al volverse discontinuas las trayectorias.",
+        "La erradicación automática de las brechas de género en las organizaciones flexibles.",
+        "Una desaceleración en la velocidad de actualización de las herramientas tecnológicas."
+      ],
+      "correct_index": 1,
+      "feedback_ok": "¡Exacto! Sennett demuestra que la estabilidad y el tiempo largo permitían tejer una historia personal con sentido. La flexibilidad continua pulveriza esa continuidad biográfica y desgasta el carácter.",
+      "feedback_error": "No es correcto. Para Sennett, el problema central del capitalismo flexible no es operativo sino existencial: al fragmentar las trayectorias, impide que el trabajador construya un relato coherente de su vida."
+    },
+    {
+      "checkpoint_id": "chk_02",
+      "scene_id": "scene_04",
+      "global_timestamp_seconds": 245.0,
+      "question": "A partir de la tesis de Yuval Noah Harari en 'Nexus' sobre la IA como inteligencia ajena, ¿en qué consiste la 'alienación cognitiva' que experimentan profesionales como médicos o abogados al utilizar IA?",
+      "options": [
+        "En la pérdida de acceso físico a sus lugares de trabajo por fallas en las redes eléctricas.",
+        "En que deben programar personalmente el código fuente de los algoritmos que utilizan.",
+        "En conservar la responsabilidad legal y ética del diagnóstico o dictamen, mientras que el criterio y el procesamiento se delegan a un sistema opaco que no controlan plenamente.",
+        "En una disminución obligatoria de sus salarios fijada por las plataformas de software."
+      ],
+      "correct_index": 2,
+      "feedback_ok": "¡Respuesta impecable! La alienación cognitiva se produce precisamente por esa asimetría: el profesional debe responder civil y penalmente por decisiones cuyo proceso interno desconoce al operar la IA como una caja negra.",
+      "feedback_error": "Incorrecto. Harari explica que la alienación cognitiva ocurre porque el profesional retiene la carga de la responsabilidad ante la ley y la sociedad, pero delega el criterio analítico a un sistema informacional opaco."
+    },
+    {
+      "checkpoint_id": "chk_03",
+      "scene_id": "scene_05",
+      "global_timestamp_seconds": 310.0,
+      "question": "¿Por qué las propuestas de Ingreso Básico Universal (RBU) no son suficientes por sí solas para resolver la crisis social provocada por la automatización del trabajo?",
+      "options": [
+        "Porque los bancos comerciales rechazan las transferencias automáticas a ciudadanos desocupados.",
+        "Porque aunque garantizan la subsistencia económica y sostienen el consumo, no resuelven la pérdida de reconocimiento, lazos comunitarios y sentido de vida que brindaba el trabajo.",
+        "Porque impiden el desarrollo de nuevas herramientas de inteligencia artificial en las universidades.",
+        "Porque reducen drásticamente la recaudación impositiva en todos los países desarrollados."
+      ],
+      "correct_index": 1,
+      "feedback_ok": "¡Totalmente acertado! El RBU soluciona el piso material y evita la indigencia, pero no suple la función ordenadora, comunitaria y existencial que la sociedad moderna depositó durante siglos en el trabajo.",
+      "feedback_error": "No es correcto. El problema no es financiero ni técnico: radica en que el dinero resuelve la cuenta corriente, pero no brinda por sí solo una respuesta a las preguntas existenciales sobre el propósito y la identidad personal."
+    },
+    {
+      "checkpoint_id": "chk_04",
+      "scene_id": "scene_07",
+      "global_timestamp_seconds": 435.0,
+      "question": "Al articular las perspectivas de Sennett, Han y Harari, ¿cuál es la misión pedagógica primordial que debe asumir la educación ante el avance de la inteligencia artificial?",
+      "options": [
+        "Entrenar a los estudiantes en técnicas de memorización para competir con la capacidad de los discos rígidos.",
+        "Enfocar el aula en la construcción de juicio crítico, deliberación ética y lazos comunitarios, superando la simple preparación técnica para un mercado asalariado en transformación.",
+        "Reemplazar todas las asignaturas humanísticas por cursos obligatorios de programación en ensamblador.",
+        "Delegar completamente el diseño de los programas de estudio a modelos predictivos sin intervención docente."
+      ],
+      "correct_index": 1,
+      "feedback_ok": "¡Conclusión magistral! Competir con la IA en procesamiento u operatividad es absurdo. La misión educativa de fondo es cultivar lo irreductiblemente humano: el pensamiento crítico, la ética, el afecto y la capacidad de construir sentido colectivo.",
+      "feedback_error": "Incorrecto. Frente a máquinas que procesan y redactan a velocidad sobrehumana, la educación no puede pretender competir en rendimiento operario. Debe refundarse como un espacio para el juicio ético, el pensamiento crítico y la construcción de sentido."
+    }
+  ]
+}

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    background: #ffffff;
+    overflow: hidden;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+  canvas {
+    display: block;
+    width: 1920px;
+    height: 1080px;
+  }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1920" height="1080"></canvas>
+<script>
+window.DUR = 404.60;
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+
+const logoSello = new Image();
+logoSello.src = '../../sello educai.jpg';
+let assetsLoaded = 0;
+function checkReady() {
+  assetsLoaded++;
+  if (assetsLoaded >= 1) window.READY = true;
+}
+logoSello.onload = checkReady;
+logoSello.onerror = checkReady;
+
+// Palette (EducAI Brand Palette)
+const C_DARK     = '#1e293b';
+const C_BLUE     = '#0284c7';
+const C_ROSE     = '#fd2e66';
+const C_PURPLE   = '#5952f8';
+const C_AMBER    = '#f59e0b';
+const C_GREEN    = '#10b981';
+const C_GREY     = '#64748b';
+const C_BORDER   = '#cbd5e1';
+
+function smoothstep(min, max, value) {
+  let x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  return x * x * (3 - 2 * x);
+}
+
+// 7 Scenes Timing
+// sc1: 0.0 - 54.67 (start: 0)
+// sc2: 55.22 - 110.35 (start: 55.22)
+// sc3: 110.90 - 169.60 (start: 110.90)
+// sc4: 170.15 - 228.73 (start: 170.15)
+// sc5: 229.28 - 286.23 (start: 229.28)
+// sc6: 286.78 - 346.06 (start: 286.78)
+// sc7: 346.61 - 404.60 (start: 346.61)
+
+window.render = function(t) {
+  ctx.clearRect(0, 0, 1920, 1080);
+
+  // Background
+  let bg = ctx.createLinearGradient(0, 0, 1920, 1080);
+  bg.addColorStop(0, '#ffffff');
+  bg.addColorStop(0.5, '#fcfcfd');
+  bg.addColorStop(1, '#f8fafc');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 1920, 1080);
+
+  // Subtle Sheen
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.beginPath();
+  let shift = (t * 10) % 700;
+  ctx.moveTo(shift - 250, 0);
+  ctx.lineTo(shift + 350, 0);
+  ctx.lineTo(shift + 50, 1080);
+  ctx.lineTo(shift - 550, 1080);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Pin grid
+  ctx.save();
+  ctx.fillStyle = 'rgba(148, 163, 184, 0.14)';
+  for (let x = 60; x < 1920; x += 120) {
+    for (let y = 60; y < 1080; y += 120) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
+  // Header
+  ctx.save();
+  if (logoSello.complete && logoSello.naturalWidth > 0) {
+    ctx.drawImage(logoSello, 80, 40, 80, 80);
+  }
+  ctx.font = 'bold 30px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("EducAI · Debate Sociotécnico y Andragogía", 185, 75);
+  ctx.font = '600 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("CUANDO EL TRABAJO DEJA DE SER NECESARIO: IA, IDENTIDAD Y SOCIEDAD", 185, 105);
+  ctx.restore();
+
+  // SCENE ROUTING
+  if (t < 55.0) {
+    renderScene01(t);
+  } else if (t < 110.5) {
+    renderScene02(t - 55.22);
+  } else if (t < 170.0) {
+    renderScene03(t - 110.90);
+  } else if (t < 229.0) {
+    renderScene04(t - 170.15);
+  } else if (t < 286.5) {
+    renderScene05(t - 229.28);
+  } else if (t < 346.5) {
+    renderScene06(t - 286.78);
+  } else {
+    renderScene07(t - 346.61);
+  }
+
+  // Persistent Subtitles Banner
+  drawSubtitles(t);
+};
+
+// ----------------------------------------------------
+// ESCENA 1: EL TRABAJO COMO ORDENADOR (0 - 55s)
+// ----------------------------------------------------
+function renderScene01(lt) {
+  let a = smoothstep(0.5, 3.0, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("1. EL TRABAJO COMO INSTITUCIÓN EXISTENCIAL", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Más allá del salario: el organizador histórico del tiempo, los vínculos y la identidad", 960, 240);
+  ctx.textAlign = 'left';
+
+  // 4 Pilares
+  const cards = [
+    { title: "⏰ Estructura Temporal", desc: "Organiza el ritmo de vida cotidiano y los horizontes a futuro.", col: C_BLUE, x: 180, y: 310 },
+    { title: "🤝 Reconocimiento Social", desc: "La pregunta '¿a qué te dedicás?' sitúa al individuo en el tejido colectivo.", col: C_PURPLE, x: 980, y: 310 },
+    { title: "🧩 Identidad y Sentido", desc: "El oficio define quién soy, qué aporto y qué lugar ocupo en el mundo.", col: C_AMBER, x: 180, y: 550 },
+    { title: "⚖️ La Gran Incógnita", desc: "Si la IA desactiva el empleo, ¿qué institución sostendrá el sentido de la vida?", col: C_ROSE, x: 980, y: 550 }
+  ];
+
+  cards.forEach(c => {
+    ctx.strokeStyle = c.col;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(c.x, c.y, 760, 190);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.fillRect(c.x, c.y, 760, 190);
+
+    ctx.font = 'bold 28px "Segoe UI", sans-serif';
+    ctx.fillStyle = c.col;
+    ctx.fillText(c.title, c.x + 40, c.y + 60);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText(c.desc, c.x + 40, c.y + 115);
+  });
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 2: RICHARD SENNETT (55 - 110s)
+// ----------------------------------------------------
+function renderScene02(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("2. DE LA ESTABILIDAD A LA FLEXIBILIDAD: RICHARD SENNETT", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_PURPLE;
+  ctx.fillText("La corrosión del carácter: el costo subjetivo del capitalismo flexible", 960, 240);
+  ctx.textAlign = 'left';
+
+  // Lado Izquierdo: Narrativa Tradicional
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(180, 290, 740, 520);
+  ctx.fillStyle = 'rgba(2, 132, 199, 0.03)';
+  ctx.fillRect(180, 290, 740, 520);
+
+  ctx.font = 'bold 30px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Narrativa Biográfica Tradicional", 220, 350);
+
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("1. Aprendizaje inicial de un oficio", 220, 420);
+  ctx.fillText("2. Acumulación progresiva de experiencia", 220, 475);
+  ctx.fillText("3. Maestría, reconocimiento y prestigio", 220, 530);
+  ctx.fillText("4. Retiro o jubilación predecible", 220, 585);
+
+  ctx.font = 'bold 24px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Pregunta: '¿Qué sé hacer?'", 220, 680);
+
+  // Lado Derecho: Capitalismo Flexible
+  ctx.strokeStyle = C_ROSE;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1000, 290, 740, 520);
+  ctx.fillStyle = 'rgba(253, 46, 102, 0.03)';
+  ctx.fillRect(1000, 290, 740, 520);
+
+  ctx.font = 'bold 30px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("Capitalismo Flexible y Discontinuo", 1040, 350);
+
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("• Descarte constante de conocimientos obsoletos", 1040, 420);
+  ctx.fillText("• Adaptabilidad forzada en lugar de maestría", 1040, 475);
+  ctx.fillText("• Pérdida de relatos a largo plazo", 1040, 530);
+  ctx.fillText("• Corrosión del carácter y vínculos débiles", 1040, 585);
+
+  ctx.font = 'bold 24px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("Pregunta: '¿Qué puedo aprender a hacer ahora?'", 1040, 680);
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 3: BYUNG-CHUL HAN (110 - 170s)
+// ----------------------------------------------------
+function renderScene03(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("3. EL SUJETO DEL RENDIMIENTO: BYUNG-CHUL HAN", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_AMBER;
+  ctx.fillText("La sociedad del cansancio: de la orden externa a la autoexplotación voluntaria", 960, 240);
+  ctx.textAlign = 'left';
+
+  // Espiral de Rendimiento (Cajas concéntricas / flujo)
+  const steps = [
+    { num: "1", title: "Mayor Capacidad Tecnológica", desc: "La IA acelera tareas: lo que llevaba 4 horas ahora lleva 1 hora.", col: C_BLUE, y: 290 },
+    { num: "2", title: "Empresario de Sí Mismo (FOMO)", desc: "El individuo se autoexige optimizarse, capacitarse y producir más.", col: C_PURPLE, y: 420 },
+    { num: "3", title: "Aumento de Expectativas", desc: "Las 3 horas ahorradas no se destinan al descanso, sino a 3 tareas extra.", col: C_AMBER, y: 550 },
+    { num: "4", title: "Tecnología de Intensificación", desc: "La productividad no libera al trabajador: eleva la presión y el agotamiento.", col: C_ROSE, y: 680 }
+  ];
+
+  steps.forEach(s => {
+    ctx.strokeStyle = s.col;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(260, s.y, 1400, 105);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(260, s.y, 1400, 105);
+
+    ctx.fillStyle = s.col;
+    ctx.beginPath();
+    ctx.arc(320, s.y + 52, 28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.num, 320, s.y + 61);
+    ctx.textAlign = 'left';
+
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = s.col;
+    ctx.fillText(s.title, 380, s.y + 45);
+
+    ctx.font = '21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText(s.desc, 380, s.y + 82);
+  });
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 4: YUVAL NOAH HARARI (170 - 229s)
+// ----------------------------------------------------
+function renderScene04(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("4. LA IA COMO INTELIGENCIA AJENA: YUVAL NOAH HARARI", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Nexus: La caja negra, la pérdida de autonomía y la alienación cognitiva", 960, 240);
+  ctx.textAlign = 'left';
+
+  // Caja Negra Diagram
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(180, 290, 480, 500);
+  ctx.fillStyle = 'rgba(2, 132, 199, 0.04)';
+  ctx.fillRect(180, 290, 480, 500);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Herramienta Clásica", 220, 350);
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("Humano ➔ Herramienta ➔ Fin", 220, 420);
+  ctx.fillText("• Amplía la fuerza física", 220, 480);
+  ctx.fillText("• Acelera el cálculo pasivo", 220, 530);
+  ctx.fillText("• El criterio permanece 100% humano", 220, 580);
+
+  // Centro: La Caja Negra
+  ctx.strokeStyle = C_ROSE;
+  ctx.lineWidth = 4;
+  ctx.strokeRect(720, 290, 480, 500);
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+  ctx.fillRect(720, 290, 480, 500);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText("La Inteligencia Ajena", 760, 350);
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillText("Humano ➔ IA ➔ Decisión", 760, 420);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillText("• Produce inferencias propias", 760, 480);
+  ctx.fillText("• Funcionamiento opaco / Caja Negra", 760, 530);
+  ctx.fillText("• Co-decisión algorítmica", 760, 580);
+
+  // Derecha: Alienación Cognitiva
+  ctx.strokeStyle = C_AMBER;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1260, 290, 480, 500);
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.04)';
+  ctx.fillRect(1260, 290, 480, 500);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_AMBER;
+  ctx.fillText("Alienación Cognitiva", 1300, 350);
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("La Paradoja de la Culpa:", 1300, 420);
+  ctx.font = 'bold 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("Se delega el criterio,", 1300, 480);
+  ctx.fillText("se retiene la responsabilidad.", 1300, 520);
+  ctx.font = '20px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_GREY;
+  ctx.fillText("Médicos, abogados y directivos siguen siendo penalmente responsables.", 1300, 580, 400);
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 5: LA PARADOJA DEL CAPITALISMO (229 - 286s)
+// ----------------------------------------------------
+function renderScene05(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("5. LA PARADOJA DEL CAPITALISMO AUTOMATIZADO", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("Innecesarios para producir, pero imprescindibles para consumir", 960, 240);
+  ctx.textAlign = 'left';
+
+  // Cadena Rota
+  ctx.strokeStyle = C_DARK;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(180, 290, 1560, 200);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(180, 290, 1560, 200);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("La Cadena Histórica Rota:", 220, 350);
+
+  ctx.font = 'bold 32px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("Trabajo  ➔  Salario  ➔  Consumo  ➔  Integración Social", 220, 420);
+
+  ctx.fillStyle = C_ROSE;
+  ctx.font = 'bold 24px "Segoe UI", sans-serif';
+  ctx.fillText("⚡ RUPTURA: La automatización masiva desacopla la producción del empleo humano", 220, 460);
+
+  // RBU y El Vacío
+  ctx.strokeStyle = C_PURPLE;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(180, 520, 760, 270);
+  ctx.fillStyle = 'rgba(89, 82, 248, 0.04)';
+  ctx.fillRect(180, 520, 760, 270);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_PURPLE;
+  ctx.fillText("El Ingreso Básico Universal (RBU)", 220, 575);
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("• Resuelve la subsistencia económica.", 220, 635);
+  ctx.fillText("• Sostiene la rueda del consumo en el mercado.", 220, 680);
+  ctx.fillText("• Pero no resuelve la necesidad de identidad.", 220, 725);
+
+  ctx.strokeStyle = C_AMBER;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(980, 520, 760, 270);
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.04)';
+  ctx.fillRect(980, 520, 760, 270);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_AMBER;
+  ctx.fillText("El Abismo Simbólico", 1020, 575);
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("¿Quién responde ahora a:", 1020, 635);
+  ctx.font = 'italic 24px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("'¿Quién soy?', '¿Qué aporto?', '¿Por qué existo?'", 1020, 680);
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("El dinero alimenta el cuerpo, no el propósito humano.", 1020, 725);
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 6: READY PLAYER ONE (286 - 346s)
+// ----------------------------------------------------
+function renderScene06(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("6. READY PLAYER ONE Y EL 'HOMO VIRTUALIS'", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_PURPLE;
+  ctx.fillText("La migración existencial: cuando la simulación digital reemplaza al mundo físico", 960, 240);
+  ctx.textAlign = 'left';
+
+  // 3 Fases Evolutivas
+  const phases = [
+    { name: "Homo Laborans", role: "SOCIEDAD INDUSTRIAL", desc: "La identidad se forja en la fábrica, el taller o la oficina. Valor por lo que produce.", col: C_BLUE, x: 180 },
+    { name: "Homo Consumens", role: "SOCIEDAD DE CONSUMO", desc: "La identidad se define por las marcas y bienes adquiridos. Valor por lo que compra.", col: C_AMBER, x: 700 },
+    { name: "Homo Virtualis", role: "SOCIEDAD POST-LABORAL", desc: "El mundo físico se abandona. Vínculos, estatus y sentido migran al metaverso (OASIS).", col: C_ROSE, x: 1220 }
+  ];
+
+  phases.forEach(p => {
+    ctx.strokeStyle = p.col;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(p.x, 290, 480, 500);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(p.x, 290, 480, 500);
+
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText(p.role, p.x + 40, 350);
+
+    ctx.font = 'bold 32px "Segoe UI", sans-serif';
+    ctx.fillStyle = p.col;
+    ctx.fillText(p.name, p.x + 40, 400);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText(p.desc, p.x + 40, 480, 400);
+
+    // Icono simbólico
+    ctx.strokeStyle = p.col;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(p.x + 240, 680, 45, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// ESCENA 7: RECLAMAR LA PREGUNTA (346 - 404s)
+// ----------------------------------------------------
+function renderScene07(lt) {
+  let a = smoothstep(0.5, 2.5, lt);
+  ctx.save();
+  ctx.globalAlpha = a;
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 42px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("7. DEL CANSANCIO AL VACÍO: RECLAMAR LA PREGUNTA", 960, 200);
+  ctx.font = '600 22px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("¿Quiénes seremos cuando trabajar ya no sea lo que nos defina?", 960, 240);
+  ctx.textAlign = 'left';
+
+  // Panel Síntesis
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(180, 290, 1560, 310);
+  ctx.fillStyle = 'rgba(2, 132, 199, 0.03)';
+  ctx.fillRect(180, 290, 1560, 310);
+
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("La Triangulación de la Crisis Contemporánea:", 220, 350);
+
+  ctx.font = '24px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_PURPLE;
+  ctx.fillText("• Richard Sennett ➔ La inestabilidad erosiona el carácter y disuelve los oficios.", 220, 410);
+  ctx.fillStyle = C_AMBER;
+  ctx.fillText("• Byung-Chul Han ➔ La sobreexigencia tecnológica genera el cansancio y la autoexplotación.", 220, 465);
+  ctx.fillStyle = C_ROSE;
+  ctx.fillText("• Automatización Avanzada ➔ La pérdida de necesidad económica abre las puertas al vacío de sentido.", 220, 520);
+
+  // Conclusión EducAI
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+  ctx.fillRect(180, 630, 1560, 170);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 28px "Segoe UI", sans-serif';
+  ctx.fillText("El Desafío Pedagógico y Andragógico:", 220, 685);
+
+  ctx.font = '22px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText("No competir con la máquina en velocidad de cálculo, sino cultivar el juicio ético,", 220, 730);
+  ctx.fillText("la duda crítica y la construcción de sentido en comunidad.", 220, 765);
+
+  ctx.restore();
+}
+
+// ----------------------------------------------------
+// SUBTÍTULOS INTEGRADOS (OPEN CAPTIONS)
+// ----------------------------------------------------
+const subs = [
+  // Scene 1
+  { start: 0.0, end: 7.5, text: "La discusión sobre la inteligencia artificial suele reducirse a cuántos empleos se destruirán." },
+  { start: 7.5, end: 17.0, text: "Pero la transformación es mucho más profunda: alterará la relación entre trabajo, identidad y sentido de la vida." },
+  { start: 17.0, end: 28.0, text: "Desde la Modernidad, el trabajo fue la gran institución organizadora de nuestra existencia." },
+  { start: 28.0, end: 40.0, text: "Estructura nuestro tiempo diario, otorga reconocimiento y vínculos, y define quiénes somos ante la sociedad." },
+  { start: 40.0, end: 54.6, text: "Si la automatización reduce la necesidad de trabajar, la crisis no será económica: será una crisis de identidad." },
+
+  // Scene 2
+  { start: 55.2, end: 68.0, text: "El trabajo tradicional ofrecía una narrativa predecible: aprendizaje, experiencia, oficio y jubilación." },
+  { start: 68.0, end: 82.0, text: "Como explica Richard Sennett en 'La corrosión del carácter', la flexibilidad rompe esa historia vital continua." },
+  { start: 82.0, end: 95.0, text: "La capacidad de adaptación forzada reemplazó al oficio: la pregunta ya no es qué sé hacer, sino qué debo aprender hoy." },
+  { start: 95.0, end: 110.3, text: "Un sistema ultra-dinámico que, paradójicamente, erosiona el carácter y destruye la estabilidad profesional." },
+
+  // Scene 3
+  { start: 110.9, end: 124.0, text: "Byung-Chul Han, en 'La sociedad del cansancio', nos revela cómo el trabajo mutó hacia la autoexplotación voluntaria." },
+  { start: 124.0, end: 138.0, text: "Convertidos en empresarios de nosotros mismos, la exigencia no viene de afuera, sino de la ilusión de libertad." },
+  { start: 138.0, end: 153.0, text: "La paradoja de la IA: si una tarea se hace en 1 hora en vez de 4, no descansamos: se nos exigen tres informes más." },
+  { start: 153.0, end: 169.6, text: "La tecnología no reduce la jornada laboral; eleva las expectativas y profundiza la presión del rendimiento." },
+
+  // Scene 4
+  { start: 170.1, end: 184.0, text: "La IA introduce una diferencia cualitativa: no solo amplía la fuerza o el cálculo, sino que co-decide con nosotros." },
+  { start: 184.0, end: 198.0, text: "Como analiza Yuval Noah Harari en 'Nexus', la IA es una inteligencia ajena que opera como una caja negra opaca." },
+  { start: 198.0, end: 213.0, text: "Surge la alienación cognitiva: delegamos el criterio técnico en el algoritmo, pero conservamos la responsabilidad legal." },
+  { start: 213.0, end: 228.7, text: "Médicos, abogados y directivos siguen respondiendo penalmente por resultados producidos por sistemas que no controlan." },
+
+  // Scene 5
+  { start: 229.3, end: 243.0, text: "Al combinarse la IA con la robótica, se rompe la cadena histórica: trabajo, salario, consumo e integración." },
+  { start: 243.0, end: 257.0, text: "La paradoja del capitalismo automatizado: el ser humano deja de ser necesario como trabajador, pero sigue siendo vital como consumidor." },
+  { start: 257.0, end: 271.0, text: "El Ingreso Básico Universal puede asegurar la subsistencia física y sostener el mercado, pero deja vacante el sentido." },
+  { start: 271.0, end: 286.2, text: "El dinero alimenta el cuerpo, pero no responde a quiénes somos ni para qué nos levantamos por la mañana." },
+
+  // Scene 6
+  { start: 286.8, end: 301.0, text: "En 'Ready Player One', la humanidad precarizada migra su existencia entera al universo virtual del OASIS." },
+  { start: 301.0, end: 315.0, text: "Es la transición histórica: del Homo laborans que produce, al Homo consumens que compra, y al Homo virtualis digital." },
+  { start: 315.0, end: 330.0, text: "Cuando el mundo real pierde su promesa de integración, la tecnología actúa como un analgésico existencial masivo." },
+  { start: 330.0, end: 346.0, text: "¿Qué ocurre con la condición humana cuando la vida entera transcurre en la ficción de una simulación?" },
+
+  // Scene 7
+  { start: 346.6, end: 360.0, text: "De la inestabilidad de Sennett y el cansancio de Han, pasamos a la amenaza definitiva: el vacío post-laboral." },
+  { start: 360.0, end: 375.0, text: "La pregunta no es cuántos empleos destruirá la máquina, sino quiénes seremos cuando trabajar ya no nos defina." },
+  { start: 375.0, end: 390.0, text: "El desafío educativo de EducAI no es competir en velocidad con la máquina, sino cultivar el juicio crítico y la comunidad." },
+  { start: 390.0, end: 404.6, text: "La cuestión última no es qué harán las máquinas con nuestro trabajo, sino qué haremos nosotros con nuestra libertad." }
+];
+
+function drawSubtitles(t) {
+  let active = subs.find(s => t >= s.start && t < s.end);
+  if (!active) return;
+
+  ctx.save();
+  ctx.font = '600 24px "Segoe UI", sans-serif';
+  let textWidth = ctx.measureText(active.text).width;
+  let boxW = Math.min(1800, textWidth + 60);
+  let boxH = 52;
+  let boxX = (1920 - boxW) / 2;
+  let boxY = 1010;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
+  ctx.beginPath();
+  ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+  ctx.fill();
+
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(active.text, 1920 / 2, boxY + 35);
+  ctx.restore();
+}
+</script>
+</body>
+</html>
