@@ -1,0 +1,85 @@
+{
+  "total": 166.42,
+  "segments": [
+    {
+      "name": "seg_01",
+      "text": "Estimado docente: para auditar la lógica actual de su aula virtual en Moodle y planificar la renovación bajo la Estructura Tripartita, en EducAI realizamos un diagnóstico exhaustivo mediante un asistente de inteligencia artificial especializado en andragogía.",
+      "file": "films/protocolo-relevamiento/seg_01.mp3",
+      "start": 0.0,
+      "duration": 16.368,
+      "end": 16.368
+    },
+    {
+      "name": "seg_02",
+      "text": "Dado que los campus virtuales son entornos cerrados y protegidos a los que las herramientas automatizadas no pueden ingresar directamente, necesitamos que nos proporcione la documentación visual y sonora de su curso siguiendo este protocolo.",
+      "file": "films/protocolo-relevamiento/seg_02.mp3",
+      "start": 16.918,
+      "duration": 14.04,
+      "end": 30.958
+    },
+    {
+      "name": "seg_03",
+      "text": "Paso uno: Preparación del Navegador. Abra su aula virtual en Moodle desde la computadora. Ajuste el zoom de la pantalla al mínimo, por ejemplo al sesenta y siete u ochenta por ciento. Esto permitirá registrar la mayor cantidad de elementos y la imagen general de la secuencia vertical en cada captura.",
+      "file": "films/protocolo-relevamiento/seg_03.mp3",
+      "start": 31.508,
+      "duration": 20.544,
+      "end": 52.052
+    },
+    {
+      "name": "seg_04",
+      "text": "Paso dos: Registro Visual en Capturas de Pantalla. En primer lugar, tome capturas ordenadas de la vista principal del curso que muestren la secuencia de las secciones, el maquetado gráfico, los banners y el orden de las unidades de arriba a abajo mediante el desplazamiento vertical.",
+      "file": "films/protocolo-relevamiento/seg_04.mp3",
+      "start": 52.602,
+      "duration": 18.192,
+      "end": 70.794
+    },
+    {
+      "name": "seg_05",
+      "text": "A continuación, tome una muestra representativa de los recursos. Ingrese a al menos un recurso de cada tipo: haga clic en un video incrustado, un documento PDF, una página de texto y un cuestionario, tomando una captura interna de cada uno.",
+      "file": "films/protocolo-relevamiento/seg_05.mp3",
+      "start": 71.344,
+      "duration": 17.112,
+      "end": 88.456
+    },
+    {
+      "name": "seg_06",
+      "text": "Para el envío, agrupe todas las imágenes ordenadas, completas y sin duplicados dentro de una sola carpeta o en un archivo comprimido punto zip.",
+      "file": "films/protocolo-relevamiento/seg_06.mp3",
+      "start": 89.006,
+      "duration": 9.504,
+      "end": 98.51
+    },
+    {
+      "name": "seg_07",
+      "text": "Paso tres: Grabación de la Nota de Audio de Observación. Grabe un audio breve, de tres a cinco minutos, desde su teléfono o computadora mientras navega por su aula virtual, detallando tres aspectos esenciales.",
+      "file": "films/protocolo-relevamiento/seg_07.mp3",
+      "start": 99.06,
+      "duration": 14.88,
+      "end": 113.94
+    },
+    {
+      "name": "seg_08",
+      "text": "Primero, la disposición: qué elementos siente dispersos o difíciles de encontrar. Segundo, formato y estética: qué imágenes, tamaños de letra o estilos desearía renovar. Y tercero, los puntos de dolor: qué partes del curso actual le generan más consultas o dificultades técnicas a los estudiantes.",
+      "file": "films/protocolo-relevamiento/seg_08.mp3",
+      "start": 114.49,
+      "duration": 21.936,
+      "end": 136.426
+    },
+    {
+      "name": "seg_09",
+      "text": "Finalmente, complete el Checklist de Relevamiento de Diagnóstico: nombre de la asignatura, verificación de la carpeta de capturas, el audio de observación y el archivo de respaldo del aula si está disponible.",
+      "file": "films/protocolo-relevamiento/seg_09.mp3",
+      "start": 136.976,
+      "duration": 13.752,
+      "end": 150.728
+    },
+    {
+      "name": "seg_10",
+      "text": "Este instrumento audita la identidad visual y define el alcance para La Clase, La Lectura y La Práctica, así como la modalidad de trabajo: entrega de paquetes SCORM o implementación directa por el equipo de EducAI en su plataforma.",
+      "file": "films/protocolo-relevamiento/seg_10.mp3",
+      "start": 151.278,
+      "duration": 14.592,
+      "end": 165.87
+    }
+  ]
+}

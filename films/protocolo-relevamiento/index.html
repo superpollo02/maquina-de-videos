@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    background: #ffffff;
+    overflow: hidden;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+  canvas {
+    display: block;
+    width: 1920px;
+    height: 1080px;
+  }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1920" height="1080"></canvas>
+<script>
+window.DUR = 165.87;
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+
+// Load logos
+const logoSello = new Image();
+logoSello.src = '../../sello educai.jpg';
+let assetsLoaded = 0;
+function checkReady() {
+  assetsLoaded++;
+  if (assetsLoaded >= 1) window.READY = true;
+}
+logoSello.onload = checkReady;
+logoSello.onerror = checkReady;
+
+// Utilities
+function smoothstep(min, max, value) {
+  let x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  return x * x * (3 - 2 * x);
+}
+
+// Color palette
+const C_DARK   = '#1e293b';
+const C_BLUE   = '#0284c7';
+const C_ORANGE = '#ea580c';
+const C_GREEN  = '#16a34a';
+const C_PURPLE = '#7c3aed';
+const C_GREY   = '#64748b';
+const C_BORDER = '#cbd5e1';
+
+window.render = function(t) {
+  ctx.clearRect(0, 0, 1920, 1080);
+
+  // 1. Board Background
+  let bg = ctx.createLinearGradient(0, 0, 1920, 1080);
+  bg.addColorStop(0, '#ffffff');
+  bg.addColorStop(0.5, '#fcfcfd');
+  bg.addColorStop(1, '#f8fafc');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 1920, 1080);
+
+  // Whiteboard gloss / sheen
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.beginPath();
+  let shift = (t * 12) % 650;
+  ctx.moveTo(shift - 250, 0);
+  ctx.lineTo(shift + 350, 0);
+  ctx.lineTo(shift + 50, 1080);
+  ctx.lineTo(shift - 550, 1080);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Subtle pin/grid dots
+  ctx.save();
+  ctx.fillStyle = 'rgba(148, 163, 184, 0.15)';
+  for (let x = 60; x < 1920; x += 120) {
+    for (let y = 60; y < 1080; y += 120) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
+  // Header institucional
+  ctx.save();
+  if (logoSello.complete && logoSello.naturalWidth > 0) {
+    ctx.drawImage(logoSello, 80, 40, 80, 80);
+  }
+  ctx.font = 'bold 32px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_DARK;
+  ctx.fillText("EducAI · Protocolo de Relevamiento y Diagnóstico", 185, 75);
+  ctx.font = '600 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = C_BLUE;
+  ctx.fillText("GUÍA DE INICIO Y AUDITORÍA DE CAMPUS VIRTUAL MOODLE", 185, 105);
+  ctx.restore();
+
+  // ----------------------------------------------------
+  // ACTO 1: DIAGNÓSTICO Y ACCESO A ENTORNOS CERRADOS (0 - 31s)
+  // Seg 1 (0-16.5s) & Seg 2 (16.5-31s)
+  // ----------------------------------------------------
+  if (t < 33.0) {
+    let p1 = smoothstep(0.5, 3.5, t);
+    let p2 = smoothstep(16.5, 19.5, t);
+
+    // Card 1: Auditoría previa con Asistente IA Andragógico
+    ctx.save();
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(160, 240, 740, 480);
+    ctx.fillStyle = 'rgba(2, 132, 199, 0.04)';
+    ctx.fillRect(160, 240, 740, 480);
+
+    ctx.font = 'bold 34px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Diagnóstico Inicial Exhaustivo", 200, 310);
+
+    ctx.font = '24px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• Reorganización bajo la Estructura Tripartita", 200, 380);
+    ctx.fillText("• Análisis de la lógica actual en Moodle", 200, 435);
+    ctx.fillText("• Asistente de IA especializado en Andragogía", 200, 490);
+
+    // Icono cerebro/IA dibujado
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(530, 610, 50, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.font = 'bold 24px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.textAlign = 'center';
+    ctx.fillText("IA Andragógica", 530, 618);
+    ctx.textAlign = 'left';
+    ctx.restore();
+
+    // Card 2: El desafío de los entornos cerrados
+    if (p2 > 0) {
+      ctx.save();
+      ctx.globalAlpha = p2;
+      ctx.strokeStyle = C_ORANGE;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(980, 240, 780, 480);
+      ctx.fillStyle = 'rgba(234, 88, 12, 0.04)';
+      ctx.fillRect(980, 240, 780, 480);
+
+      ctx.font = 'bold 34px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_ORANGE;
+      ctx.fillText("Campus Virtuales: Entornos Cerrados", 1020, 310);
+
+      ctx.font = '24px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_DARK;
+      ctx.fillText("• Acceso protegido con contraseñas institucionales", 1020, 380);
+      ctx.fillText("• Las IAs no pueden ingresar de forma directa", 1020, 435);
+      ctx.fillText("• Se requiere documentación externa del docente:", 1020, 490);
+
+      ctx.font = 'bold 28px "Segoe UI", sans-serif';
+      ctx.fillStyle = C_BLUE;
+      ctx.fillText("📸 1. Registro Visual en Capturas", 1060, 560);
+      ctx.fillStyle = C_PURPLE;
+      ctx.fillText("🎙 2. Audio de Observación Guiada", 1060, 620);
+      ctx.restore();
+    }
+  }
+
+  // ----------------------------------------------------
+  // ACTO 2: LOS 3 PASOS TÉCNICOS (31s - 110s)
+  // Paso 1 (31 - 52s) | Paso 2 (52 - 89s) | Paso 3 (89 - 110s)
+  // ----------------------------------------------------
+  if (t >= 31.0 && t < 112.0) {
+    let alphaActo2 = smoothstep(31.0, 32.5, t);
+    ctx.save();
+    ctx.globalAlpha = alphaActo2;
+
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 42px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("PROTOCOLO TÉCNICO EN 3 PASOS", 960, 190);
+    ctx.font = '600 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Preparación y levantamiento visual y sonoro del aula virtual Moodle", 960, 225);
+    ctx.textAlign = 'left';
+
+    const bW = 510;
+    const bH = 610;
+    const bY = 260;
+    const b1X = 120;
+    const b2X = 705;
+    const b3X = 1290;
+
+    // --- BLOQUE 1: PASO 1 - PREPARACIÓN DEL NAVEGADOR ---
+    let isP1 = (t >= 31.0 && t < 52.0);
+    ctx.save();
+    ctx.strokeStyle = isP1 ? C_BLUE : C_BORDER;
+    ctx.lineWidth = isP1 ? 5 : 2;
+    ctx.fillStyle = isP1 ? 'rgba(2, 132, 199, 0.05)' : '#ffffff';
+    ctx.strokeRect(b1X, bY, bW, bH);
+    ctx.fillRect(b1X, bY, bW, bH);
+
+    ctx.fillStyle = C_BLUE;
+    ctx.beginPath();
+    ctx.arc(b1X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("1", b1X + 43, bY + 58);
+
+    ctx.font = 'bold 30px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("PASO 1: NAVEGADOR", b1X + 90, bY + 58);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Ajuste de Zoom y Vista General", b1X + 40, bY + 115);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("1. Abra Moodle desde la PC", b1X + 40, bY + 175);
+    ctx.fillText("2. Ajuste el zoom al mínimo:", b1X + 40, bY + 230);
+    ctx.font = 'bold 32px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("   Zoom: 67% u 80%", b1X + 40, bY + 280);
+
+    ctx.font = '21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("• Mayor amplitud panorámica", b1X + 40, bY + 345);
+    ctx.fillText("• Registro visual de la secuencia", b1X + 40, bY + 390);
+    ctx.fillText("• Menos fragmentación por captura", b1X + 40, bY + 435);
+
+    // Icono lupa/zoom
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(b1X + 250, bY + 510, 35, 0, Math.PI * 2);
+    ctx.moveTo(b1X + 275, bY + 535);
+    ctx.lineTo(b1X + 310, bY + 570);
+    ctx.stroke();
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("67%", b1X + 232, bY + 518);
+    ctx.restore();
+
+    // Flecha 1 -> 2
+    ctx.save();
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(b1X + bW + 8, bY + bH / 2);
+    ctx.lineTo(b2X - 8, bY + bH / 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(b2X - 22, bY + bH / 2 - 12);
+    ctx.lineTo(b2X - 8, bY + bH / 2);
+    ctx.lineTo(b2X - 22, bY + bH / 2 + 12);
+    ctx.stroke();
+    ctx.restore();
+
+    // --- BLOQUE 2: PASO 2 - CAPTURAS DE PANTALLA ---
+    let isP2 = (t >= 52.0 && t < 89.0);
+    ctx.save();
+    ctx.strokeStyle = isP2 ? C_BLUE : C_BORDER;
+    ctx.lineWidth = isP2 ? 5 : 2;
+    ctx.fillStyle = isP2 ? 'rgba(2, 132, 199, 0.05)' : '#ffffff';
+    ctx.strokeRect(b2X, bY, bW, bH);
+    ctx.fillRect(b2X, bY, bW, bH);
+
+    ctx.fillStyle = C_BLUE;
+    ctx.beginPath();
+    ctx.arc(b2X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("2", b2X + 43, bY + 58);
+
+    ctx.font = 'bold 30px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("PASO 2: CAPTURAS", b2X + 90, bY + 58);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Registro Visual Ordenado", b2X + 40, bY + 115);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("A. Secuencia de Unidades:", b2X + 40, bY + 170);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   Banners, maquetado y scrolling", b2X + 40, bY + 205);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("B. Muestra de Recursos (1 de c/u):", b2X + 40, bY + 260);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   • Video incrustado   • Documento PDF", b2X + 40, bY + 295);
+    ctx.fillText("   • Página de texto    • Cuestionario", b2X + 40, bY + 330);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREEN;
+    ctx.fillText("C. Requisitos de Envío:", b2X + 40, bY + 385);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   • Carpeta única o archivo .ZIP", b2X + 40, bY + 420);
+    ctx.fillText("   • Ordenadas, completas y sin duplicados", b2X + 40, bY + 455);
+
+    // Icono cámara/carpeta
+    ctx.strokeStyle = C_GREEN;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(b2X + 205, bY + 500, 100, 65);
+    ctx.beginPath();
+    ctx.arc(b2X + 255, bY + 532, 16, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Flecha 2 -> 3
+    ctx.save();
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(b2X + bW + 8, bY + bH / 2);
+    ctx.lineTo(b3X - 8, bY + bH / 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(b3X - 22, bY + bH / 2 - 12);
+    ctx.lineTo(b3X - 8, bY + bH / 2);
+    ctx.lineTo(b3X - 22, bY + bH / 2 + 12);
+    ctx.stroke();
+    ctx.restore();
+
+    // --- BLOQUE 3: PASO 3 - VOICE MEMO ---
+    let isP3 = (t >= 89.0 && t < 112.0);
+    ctx.save();
+    ctx.strokeStyle = isP3 ? C_PURPLE : C_BORDER;
+    ctx.lineWidth = isP3 ? 5 : 2;
+    ctx.fillStyle = isP3 ? 'rgba(124, 58, 237, 0.05)' : '#ffffff';
+    ctx.strokeRect(b3X, bY, bW, bH);
+    ctx.fillRect(b3X, bY, bW, bH);
+
+    ctx.fillStyle = C_PURPLE;
+    ctx.beginPath();
+    ctx.arc(b3X + 50, bY + 50, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 26px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText("3", b3X + 43, bY + 58);
+
+    ctx.font = 'bold 30px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("PASO 3: VOICE MEMO", b3X + 90, bY + 58);
+
+    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_PURPLE;
+    ctx.fillText("Audio de Observación (3 a 5 min)", b3X + 40, bY + 115);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("1. Disposición de elementos:", b3X + 40, bY + 175);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   Qué recursos siente dispersos o difíciles", b3X + 40, bY + 210);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("2. Formato y estética:", b3X + 40, bY + 270);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   Imágenes, tipografías y banners a renovar", b3X + 40, bY + 305);
+
+    ctx.font = 'bold 21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("3. Puntos de dolor y dinámica:", b3X + 40, bY + 365);
+    ctx.font = '19px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("   Partes que generan más consultas o dudas", b3X + 40, bY + 400);
+
+    // Icono micrófono / ondas
+    ctx.strokeStyle = C_PURPLE;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(b3X + 235, bY + 470, 30, 50, 15);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(b3X + 250, bY + 490, 28, 0, Math.PI);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(b3X + 250, bY + 520);
+    ctx.lineTo(b3X + 250, bY + 545);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore();
+  }
+
+  // ----------------------------------------------------
+  // ACTO 3: PARTE 2 - CHECKLIST Y ALCANCE (112s - 165.8s)
+  // Seg 9 (112 - 138s) & Seg 10 (138 - 165.8s)
+  // ----------------------------------------------------
+  if (t >= 110.0) {
+    let alphaActo3 = smoothstep(110.0, 112.5, t);
+    ctx.save();
+    ctx.globalAlpha = alphaActo3;
+
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 40px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("PARTE 2: CHECKLIST DE RELEVAMIENTO DE DIAGNÓSTICO", 960, 190);
+    ctx.font = '600 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Instrumento de relevamiento inicial y definición de alcance de renovación", 960, 225);
+    ctx.textAlign = 'left';
+
+    // Panel Izquierdo: Auditoría e Instrumentos aportados
+    ctx.strokeStyle = C_BLUE;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(160, 270, 760, 570);
+    ctx.fillStyle = 'rgba(2, 132, 199, 0.03)';
+    ctx.fillRect(160, 270, 760, 570);
+
+    ctx.font = 'bold 28px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("1. Diagnóstico e Instrumentos", 200, 330);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• Nombre de la materia y plataforma", 200, 390);
+    ctx.fillText("☑ Carpeta de capturas con zoom 67/80%", 200, 440);
+    ctx.fillText("☑ Audio de observación visual (3-5 min)", 200, 490);
+    ctx.fillText("☑ Archivo de respaldo .MBZ/.ZIP (opcional)", 200, 540);
+
+    ctx.font = 'bold 28px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("2. Auditoría de Patrones Visuales", 200, 620);
+    ctx.font = '21px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("• Detección de secuencias heterogéneas", 200, 670);
+    ctx.fillText("• Disparidad en banners y tamaños de imagen", 200, 715);
+    ctx.fillText("• Enlaces sueltos vs. recursos integrados", 200, 760);
+
+    // Panel Derecho: Alcance Tripartito y Modalidades
+    ctx.strokeStyle = C_GREEN;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(980, 270, 780, 570);
+    ctx.fillStyle = 'rgba(22, 163, 74, 0.03)';
+    ctx.fillRect(980, 270, 780, 570);
+
+    ctx.font = 'bold 28px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREEN;
+    ctx.fillText("3. Alcance de Renovación Tripartita", 1020, 330);
+
+    ctx.font = '22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_DARK;
+    ctx.fillText("• LA CLASE: Conservar / Editar / Shorts", 1020, 385);
+    ctx.fillText("• LA LECTURA: Unificar en Recurso Libro / Infografías", 1020, 435);
+    ctx.fillText("• LA PRÁCTICA: Depurar bancos y Trivias SCORM", 1020, 485);
+
+    ctx.font = 'bold 28px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_PURPLE;
+    ctx.fillText("4. Modalidad de Trabajo", 1020, 565);
+
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_BLUE;
+    ctx.fillText("Opción A · Entrega por Google Drive:", 1020, 625);
+    ctx.font = '20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("Paquetes SCORM e instructivos para carga docente.", 1020, 660);
+
+    ctx.font = 'bold 22px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_ORANGE;
+    ctx.fillText("Opción B · Carga Directa en Moodle:", 1020, 715);
+    ctx.font = '20px "Segoe UI", sans-serif';
+    ctx.fillStyle = C_GREY;
+    ctx.fillText("Maquetado e implementación directa por el equipo EducAI.", 1020, 750);
+
+    // Banner final al pie
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    ctx.fillRect(160, 860, 1600, 110);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 24px "Segoe UI", sans-serif';
+    ctx.fillText("EducAI transforma su curso en un entorno previsible, andragógico y sin estrés.", 200, 910);
+    ctx.font = '20px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText("Comience hoy enviando su carpeta de capturas y nota de voz.", 200, 945);
+
+    ctx.restore();
+  }
+
+  // Subtitles
+  drawSubtitles(t);
+};
+
+// Subtitles list
+const subs = [
+  { start: 0.0, end: 16.5, text: "Para auditar su aula virtual y planificar la renovación, realizamos un diagnóstico previo con IA andragógica." },
+  { start: 16.5, end: 31.0, text: "Al ser campus virtuales protegidos, requerimos que nos proporcione la documentación visual y sonora del curso." },
+  { start: 31.0, end: 52.0, text: "Paso 1: Abra Moodle y ajuste el zoom al mínimo (67% u 80%) para capturar la secuencia vertical completa." },
+  { start: 52.0, end: 71.0, text: "Paso 2: Tome capturas ordenadas de la secuencia de secciones, banners y scrolling de arriba a abajo." },
+  { start: 71.0, end: 89.0, text: "Muestra representativa: capture 1 recurso de cada tipo (video, PDF, texto y cuestionario) en una carpeta o .ZIP." },
+  { start: 89.0, end: 104.0, text: "Paso 3: Grabe un audio de observación breve (3 a 5 min) navegando por su aula virtual desde el celular o PC." },
+  { start: 104.0, end: 126.0, text: "Detalle: qué recursos siente dispersos, aspectos estéticos a renovar y qué partes generan dudas a los estudiantes." },
+  { start: 126.0, end: 140.0, text: "Checklist de Relevamiento: complete datos de la materia, verificación de capturas, audio y archivo de respaldo." },
+  { start: 140.0, end: 165.87, text: "Defina el alcance por bloque (Clase, Lectura y Práctica) y la modalidad: entrega SCORM o carga directa en Moodle." }
+];
+
+function drawSubtitles(t) {
+  let active = subs.find(s => t >= s.start && t < s.end);
+  if (!active) return;
+
+  ctx.save();
+  ctx.font = '600 24px "Segoe UI", sans-serif';
+  let textWidth = ctx.measureText(active.text).width;
+  let boxW = textWidth + 60;
+  let boxH = 50;
+  let boxX = (1920 - boxW) / 2;
+  let boxY = 1015;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  ctx.beginPath();
+  ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+  ctx.fill();
+
+  ctx.strokeStyle = C_BLUE;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(active.text, 1920 / 2, boxY + 34);
+  ctx.restore();
+}
+</script>
+</body>
+</html>
