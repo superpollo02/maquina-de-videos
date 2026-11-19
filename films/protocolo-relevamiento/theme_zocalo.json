@@ -1,0 +1,19 @@
+{
+  "source_image": "zocalo educai OK.jpg",
+  "palette": {
+    "primary": "#fd2e66",
+    "secondary": "#5952f8",
+    "alert": "#fd2e66",
+    "dark_neutral": "#302567",
+    "background": "#ffffff",
+    "board_sheen": "rgba(255, 255, 255, 0.45)"
+  },
+  "typography": {
+    "font_family": "Segoe UI, -apple-system, sans-serif",
+    "title_weight": "bold",
+    "body_weight": "normal",
+    "subtitles_bg": "rgba(15, 23, 42, 0.88)",
+    "subtitles_text": "#ffffff",
+    "subtitles_border": "#fd2e66"
+  }
+}
