@@ -18,11 +18,16 @@ Esta habilidad resuelve el problema de las cuotas de subida en Moodle para video
 ## 🚀 Uso del Empaquetador CLI
 
 ```powershell
-python core/scorm/scorm_packager.py `
+# Modo Dual (genera paquete completo autocontenido + paquete Zero-Weight de streaming)
+python -m core.scorm.scorm_packager `
   --title "Protocolo de Relevamiento EducAI" `
-  --video-url "https://servidor-educai.com/videos/protocolo.mp4" `
+  --video-url "Protocolo_Final.mp4" `
+  --include-video "films/protocolo/Protocolo_Final.mp4" `
   --checkpoints-json "checkpoints.json" `
-  --output "Protocolo_Interactivo_SCORM.zip"
+  --audio-timeline "audio_timeline.json" `
+  --strict-sync `
+  --dual-zip `
+  --output "Protocolo_SCORM_Completo.zip"
 ```
 
 ## Estructura de Checkpoints JSON

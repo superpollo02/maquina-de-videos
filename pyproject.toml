@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maquina-de-videos"
+version = "0.2.0"
+description = "Máquina de Videos · EducAI con integración modular OpenMontage"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "jsonschema>=4.20",
+    "python-dotenv>=1.0",
+    "Pillow>=10.0",
+    "numpy>=1.24",
+    "requests>=2.31",
+    "certifi>=2026.10.19",
+    "edge-tts>=7.0.0",
+    "python-pptx>=1.0.0",
+    "python-docx>=1.0.0",
+    "pydub>=0.25.1",
+    "pypdf>=5.0",
+    "pymupdf>=1.24.0",
+    "pdfplumber>=0.11.0",
+    "watchfiles>=0.21",
+    "pythainlp>=5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "httpx>=0.24",
+]
+backlot = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "websockets>=14.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "vendor/openmontage"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

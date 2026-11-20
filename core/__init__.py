@@ -1,0 +1,1 @@
+"""EducAI Core Package."""

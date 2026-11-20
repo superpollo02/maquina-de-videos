@@ -24,12 +24,16 @@ Esta habilidad genera subtítulos de alto impacto con **sincronía palabra por p
 
 ## 🚀 Integración en el Pipeline
 
-### A. Extracción con `edge-tts` (`WordBoundary`)
+### A. Extracción con `edge-tts` (`WordBoundary`) o mediante `ToolRegistry`
+> [!IMPORTANT]
+> En `edge-tts >= 7.3.1`, el parámetro `boundary` es por defecto `'SentenceBoundary'`. Debe pasarse explícitamente `boundary="WordBoundary"` para emitir marcas de tiempo por palabra, o utilizar el adaptador integrado `EdgeTTS` (`python -m core.orchestrator` / `registry.get("edge_tts")`).
+
 ```python
 import edge_tts, asyncio, json
 
 async def synthesize_with_words(text, voice, out_mp3, out_json):
-    communicate = edge_tts.Communicate(text, voice)
+    # En edge-tts >= 7.3.1 es mandatorio pasar boundary="WordBoundary"
+    communicate = edge_tts.Communicate(text, voice, boundary="WordBoundary")
     words = []
     with open(out_mp3, "wb") as f:
         async for chunk in communicate.stream():
@@ -38,7 +42,7 @@ async def synthesize_with_words(text, voice, out_mp3, out_json):
             elif chunk["type"] == "WordBoundary":
                 start = chunk["offset"] / 10_000_000
                 dur = chunk["duration"] / 10_000_000
-                words.append({"word": chunk["text"], "start": start, "end": start + dur})
+                words.append({"word": chunk["text"], "start": round(start, 3), "end": round(start + dur, 3)})
     with open(out_json, "w", encoding="utf-8") as jf:
         json.dump(words, jf, ensure_ascii=False, indent=2)
 ```

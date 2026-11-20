@@ -10,6 +10,20 @@ films/**/preview_test.png
 films/**/test_voice.mp3
 films/**/still_*.png
 films/**/video_raw.mp4
+**/frames/
+frames/
+
+# Audio temporal no comprimido pesado
+*.wav
+films/**/*.wav
+
+# Python & Pytest
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.tmp_scorm/
+*.egg-info/
+.codegraph/
 
 # Archivos zip grandes
 *.zip

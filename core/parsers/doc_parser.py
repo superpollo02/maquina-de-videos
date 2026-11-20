@@ -79,12 +79,39 @@ def parse_docx(file_path):
     }
 
 def parse_pdf(file_path):
-    from pypdf import PdfReader
-    reader = PdfReader(file_path)
-    pages = []
+    text_pages = []
 
-    for idx, page in enumerate(reader.pages, 1):
-        text = page.extract_text() or ""
+    # 1. Try pypdf
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(file_path)
+        for page in reader.pages:
+            text_pages.append(page.extract_text() or "")
+    except Exception:
+        text_pages = []
+
+    # 2. Try pymupdf if pypdf unavailable or failed
+    if not text_pages:
+        try:
+            import pymupdf
+            with pymupdf.open(file_path) as doc:
+                for page in doc:
+                    text_pages.append(page.get_text("text") or "")
+        except Exception:
+            text_pages = []
+
+    # 3. Try pdfplumber fallback
+    if not text_pages:
+        try:
+            import pdfplumber
+            with pdfplumber.open(file_path) as pdf:
+                for page in pdf.pages:
+                    text_pages.append(page.extract_text() or "")
+        except Exception:
+            text_pages = []
+
+    pages = []
+    for idx, text in enumerate(text_pages, 1):
         lines = [l.strip() for l in text.split("\n") if l.strip()]
         pages.append({
             "page_number": idx,

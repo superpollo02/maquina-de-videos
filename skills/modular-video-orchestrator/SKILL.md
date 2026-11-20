@@ -21,7 +21,27 @@ Esta habilidad resuelve el cuello de botella técnico del renderizado de videos 
    - Ensambla todas las escenas con el filtro concat de FFmpeg sin recodificación innecesaria (`-c copy`).
    - Integra automáticamente el video de cierre institucional (`ending. educai.mp4`).
 
-## 🚀 Flujo de Ejecución
+## 🚀 Flujo de Ejecución y Orquestador Unificado (`core.orchestrator`)
+
+El orquestador unificado (`python -m core.orchestrator`) integra el motor modular de OpenMontage y los gates QA ejecutables:
+
+```bash
+# Ejecutar pipeline completo desde un documento hacia SCORM interactivo
+python -m core.orchestrator \
+  --project-dir "films/mi-leccion" \
+  --doc "documento.docx" \
+  --theme-image "sello educai.jpg" \
+  --render-mode hyperframes \
+  --title "Título de la Lección" \
+  --dual-scorm
+```
+
+Backends soportados en `--render-mode`:
+- `hyperframes`: HTML/GSAP de alto rendimiento con `style_bridge` (por defecto).
+- `canvas`: Motor determinista 24 fps (`window.render(t)`) con reanudación desde `frames/`.
+- `ink_theater`: Títeres SVG y clips mocap de CMU.
+- `threejs`: Escenas 3D interactivas.
+- `ffmpeg`: Composición directa de pistas y pistas de imagen.
 
 ```
 scenes.json 
@@ -29,6 +49,6 @@ scenes.json
    ├── Escena 2 (01:15 - 02:30) ──► scene_02.mp4
    └── Escena 3 (02:30 - 04:00) ──► scene_03.mp4
                                        │
-                                       ▼ Concat Stitcher
-                            Leccion_Completa_Final.mp4
+                                       ▼ Concat Stitcher (outro_mux)
+                            Leccion_Completa_Final.mp4 ──► SCORM Dual
 ```

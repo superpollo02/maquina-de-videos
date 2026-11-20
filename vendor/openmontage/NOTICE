@@ -1,0 +1,21 @@
+OpenMontage
+Copyright (c) 2024-2026 OpenMontage Authors / OpenMontage Inc.
+Source: https://github.com/OpenMontageInc/OpenMontage.git (commit 2e003e65fa99a0f329478a2c1cdcf26bc481933a)
+Licensed under the GNU Affero General Public License v3.0 (AGPLv3).
+
+This directory contains subsets of OpenMontage integrated into Máquina de Videos · EducAI:
+- lib/
+- tools/
+- schemas/
+- styles/
+- pipeline_defs/
+- ink-theater/
+- backlot/
+- scripts/ (scaffold_atelier_project.py, backlot_simulate_run.py)
+
+Modifications and Additions by EducAI (2026-11-20):
+1. tools/audio/edge_tts.py: Added EdgeTTS(BaseTool) adapter with WordBoundary support.
+2. tools/video/hyperframes_compose.py: Windows compatibility patches (encoding="utf-8", errors="replace", resilient CLI probe).
+3. tools/analysis/composition_validator.py: Windows ffprobe dependency check fix.
+4. lib/config_model.py, tools/cost_tracker.py: Explicit UTF-8 encoding in file operations.
+5. tools/video/video_compose.py: Resilient remotion-composer check and UTF-8 process execution.

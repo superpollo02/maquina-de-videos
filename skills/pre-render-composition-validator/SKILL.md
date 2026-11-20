@@ -27,5 +27,22 @@ Ejecutar **siempre antes de lanzar el renderizado cuadro a cuadro** (`render_fra
 4. **Sincronía de Checkpoints SCORM (si aplica):**
    - Verificar que todo `timestamp` en `scorm_checkpoints.json` coincida con el `end` de una escena en `audio_timeline.json` (`+0.05s` a `+0.1s`), nunca en medio de una locución.
 
-## 🤖 Ejecución con Subagente
+## 🤖 Ejecución Programática (`core.qa.pre_render`)
+
+Este gate se ejecuta automáticamente en el orquestador y puede invocarse directamente en Python:
+
+```python
+from core.qa import validate_pre_render
+
+report = validate_pre_render(
+    project_dir="films/mi-leccion",
+    render_mode="canvas",  # o "hyperframes"
+    timeline_file="audio_timeline.json",
+    audio_file="audio_mixed.m4a",
+)
+
+if not report["passed"]:
+    print("Bloqueado por QA:", report["issues"])
+```
+
 Para proyectos largos, delegar este checklist a un subagente de validación antes de iniciar el renderizado pesado. Si falla cualquier punto, **bloquear el render** y corregir la fuente primero.

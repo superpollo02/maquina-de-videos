@@ -31,5 +31,22 @@ Ejecutar **después de generar el MP4 final** y **antes de entregarlo al usuario
      - **Elementos de escena:** diagramas, íconos y tarjetas visibles dentro del área segura.
    - Eliminar `_qa_frames/` al aprobar la revisión.
 
+## 🤖 Ejecución Programática (`core.qa.post_render`)
+
+Este gate se ejecuta automáticamente en el orquestador y puede invocarse directamente en Python:
+
+```python
+from core.qa import validate_post_render
+
+report = validate_post_render(
+    video_path="films/mi-leccion/Leccion_EducAI_Final.mp4",
+    check_silence=True,
+    spotcheck_frames=True,
+)
+
+if not report["passed"]:
+    print("Fallos en post-render QA:", report["issues"])
+```
+
 ## 🤖 Ejecución con Subagente
 Conviene delegar esta auditoría a un subagente independiente (que no escribió el `index.html`) para obtener una revisión objetiva de las capturas extraídas y el reporte de `ffprobe` antes de dar la tarea por terminada.
