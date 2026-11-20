@@ -1,11 +1,18 @@
 ---
 name: tiktok-word-captions
-description: Genera subtítulos dinámicos a nivel de palabra con resaltado activo estilo TikTok/Reels sincronizados con la locución TTS para videos en Canvas 2D/HTML5 o exportación FFmpeg (.ass).
+description: Genera subtítulos dinámicos a nivel de palabra con resaltado activo estilo CapCut/TikTok/Reels sincronizados con la locución TTS para videos en Canvas 2D/HTML5 o quemado directo FFmpeg (.ass). Activos por defecto bajo la Invariante 5 (Opt-Out).
 ---
 
-# TikTok Word-Level Captions
+# CapCut / TikTok Word-Level Captions
 
-Esta habilidad genera subtítulos de alto impacto con **sincronía palabra por palabra** y resaltado visual activo (estilo karaoke/TikTok) para el motor determinista `render(t)` o quemado directo con FFmpeg.
+Esta habilidad genera subtítulos de alto impacto con **sincronía palabra por palabra** y resaltado visual activo (estilo karaoke/CapCut/TikTok) para el motor determinista `render(t)` o quemado directo con FFmpeg (`libass`).
+
+## 📌 Regla de Producción por Defecto (Invariante 5)
+
+> [!IMPORTANT]
+> **Subtítulos activos por defecto:**  
+> En EducAI, todo video producido (común o SCORM) genera e incluye subtítulos estilo CapCut de forma predeterminada a partir de `word_timings.json`.  
+> **Regla Opt-Out:** Solo se desactivan si el usuario solicita expresamente *"sin subtítulos"*, *"no pongas subtítulos"* o mediante el flag CLI `--no-captions`.
 
 ## 📌 Principios de Diseño y Sincronía
 
@@ -18,42 +25,40 @@ Esta habilidad genera subtítulos de alto impacto con **sincronía palabra por p
    - Cada bloque permanece visible únicamente entre `chunk[0].start` y `chunk[-1].end`.
 
 3. **Estilo Visual (Alto Contraste y Legibilidad):**
-   - Tipografía sans-serif gruesa (`800`/`900`, mayúsculas o *Title Case*), borde oscuro (`strokeText`) + sombra proyectada o píldora semitransparente detrás del bloque (*scrim*).
-   - **Palabra inactiva:** blanco (`#ffffff`) con opacidad alta.
-   - **Palabra activa (`t >= w.start && t <= w.end`):** color de acento de marca (ej. Amarillo `#facc15`, Cian `#38bdf8` o Coral `#f97316`) con leve escala (`1.08x`) sin provocar saltos de línea (*layout shift*).
+   - Tipografía sans-serif gruesa (`Arial Black`, `Montserrat 900` o `Segoe UI Bold`), borde oscuro grueso (`outline=6`) + sombra (`shadow=3`).
+   - **Palabra inactiva:** blanco puro (`#ffffff` / `&H00FFFFFF&`).
+   - **Palabra activa (`t >= w.start && t <= w.end`):** color de acento de marca (ej. Amarillo `#facc15` / `&H0015CCFA&` o Cian `#38bdf8`) con formato bold/escala sin provocar saltos de línea (*layout shift*).
 
-## 🚀 Integración en el Pipeline
+---
 
-### A. Extracción con `edge-tts` (`WordBoundary`) o mediante `ToolRegistry`
-> [!IMPORTANT]
-> En `edge-tts >= 7.3.1`, el parámetro `boundary` es por defecto `'SentenceBoundary'`. Debe pasarse explícitamente `boundary="WordBoundary"` para emitir marcas de tiempo por palabra, o utilizar el adaptador integrado `EdgeTTS` (`python -m core.orchestrator` / `registry.get("edge_tts")`).
+## 🚀 Generador Determinista Integrado (`core.captions.capcut_ass`)
+
+El módulo `core/captions/capcut_ass.py` procesa automáticamente `audio_timeline.json` y `word_timings.json` para generar el archivo de subtítulos:
 
 ```python
-import edge_tts, asyncio, json
+from core.captions.capcut_ass import build_capcut_ass
 
-async def synthesize_with_words(text, voice, out_mp3, out_json):
-    # En edge-tts >= 7.3.1 es mandatorio pasar boundary="WordBoundary"
-    communicate = edge_tts.Communicate(text, voice, boundary="WordBoundary")
-    words = []
-    with open(out_mp3, "wb") as f:
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                f.write(chunk["data"])
-            elif chunk["type"] == "WordBoundary":
-                start = chunk["offset"] / 10_000_000
-                dur = chunk["duration"] / 10_000_000
-                words.append({"word": chunk["text"], "start": round(start, 3), "end": round(start + dur, 3)})
-    with open(out_json, "w", encoding="utf-8") as jf:
-        json.dump(words, jf, ensure_ascii=False, indent=2)
+ass_file = build_capcut_ass(
+    timeline_path="films/mi-leccion/audio_timeline.json",
+    word_timings_path="films/mi-leccion/word_timings.json",
+    output_ass_path="films/mi-leccion/captions.ass",
+    chunk_size=4,
+    accent_color_bgr="&H0015CCFA&",  # Amarillo EducAI en BGR
+)
 ```
 
-### B. Renderizado Determinista en Canvas (`window.render(t)`)
-- Calcular el ancho total de cada palabra del bloque activo usando `ctx.measureText(w.word + " ")` antes de dibujar, para centrar el bloque de forma fija y evitar vibración horizontal cuando la palabra activa cambia de escala.
-- Dibujar primero la sombra/borde (`ctx.strokeText`) y luego el relleno (`ctx.fillText`) con el color de acento si `t >= w.start && t <= w.end`.
-- Mantener la zona de subtítulos dentro del tercio inferior seguro (por encima de la barra de controles en 16:9, y evitando el 20% inferior en 9:16).
+### Quemado Rápido con FFmpeg (`libass` en Windows)
+Para quemar el `.ass` en el video sin errores de escape de rutas en Windows:
 
-### C. Alternativa Rápida en FFmpeg (`.ass`)
-- Para quemar subtítulos sobre videos ya renderizados, generar un archivo SubStation Alpha (`.ass`) usando etiquetas karaoke `\kf` (duración en centésimas de segundo) y aplicar con:
-  ```powershell
-  ffmpeg -y -i video.mp4 -vf "ass=captions.ass" -c:a copy video_subtitled.mp4
-  ```
+```python
+# Escapar backslashes y dos puntos de unidad de disco (C:)
+ass_escaped = str(ass_file).replace("\\", "/").replace(":", "\\:")
+
+cmd = [
+    "ffmpeg", "-y",
+    "-i", "video_raw.mp4",
+    "-vf", f"ass='{ass_escaped}'",
+    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "copy",
+    "video_subtitulado.mp4"
+]
+```
