@@ -52,15 +52,29 @@ El proyecto está diseñado como un equipo de especialistas coordinados por el *
         └──► Interactive SCORM Packager (`core.scorm`) ─────────────┘
 ```
 
-### Funciones de los Componentes:
+### 2.1. Matriz de Agentes y Subagentes del Ecosistema (Tabla de Doble Entrada)
 
-1. **Document Ingestion (`doc_parser.py`):** Ingesta diapositivas `.pptx` (extrayendo notas del orador), documentos `.docx` y archivos `.pdf` mediante una cadena tolerante de extracción (`pypdf` $\to$ `pymupdf` $\to$ `pdfplumber`).
-2. **Brand & Theme Extractor (`brand_theme.py`):** Cuantiza imágenes de logotipos institucionales y extrae una paleta armónica de 8 colores y reglas tipográficas para generar `DESIGN.md` y variables CSS `:root`.
-3. **Voice & Word Captions (`edge_tts.py` / `tiktok-word-captions`):** Locución en español argentino (`es-AR-ElenaNeural`) a `-2%` de velocidad. Captura eventos `WordBoundary` para generar `word_timings.json` y subtítulos dinámicos estilo TikTok/karaoke.
-4. **Pre-Render QA Validator (`pre_render.py`):** Verifica que no haya errores de consola en 5 puntos de tiempo evaluados en Chromium headless (Playwright), valida coincidencia de duración de audio y bloquea renders si una pregunta corta la voz docente.
-5. **Outro Mux (`outro_mux.py`):** Garantiza salida AAC estéreo a 44.1 kHz (2 canales) normalizada a $-16\text{ LUFS}$ y concatena el cierre institucional `ending_norm.mp4`.
-6. **Post-Render QA Auditor (`post_render.py`):** Audita con `ffprobe` e inspección visual de fotogramas clave que el MP4 final cumpla con el estándar H.264/AAC y que `silencedetect` no revele cortes abruptos de alocución.
-7. **Interactive SCORM Packager (`scorm_packager.py`):** Empaqueta la video-clase en paquetes SCORM 1.2 interactivos para Moodle con soporte **Dual ZIP**.
+| Entidad / Actor | Nivel / Rol | Función Principal (¿Qué hace?) | Entradas (Insumos) | Salidas (Entregables) | Módulo / Habilidad Vinculada | Control Crítico / Invariante |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Antigravity Coordinator** | **Agente Principal** | Interfaz con el usuario, interpretación pedagógica, planificación global, delegación de tareas y supervisión general del ciclo de vida. | Prompt del usuario, documentos de cátedra, imágenes de marca. | Plan de producción, reportes de estado, entregables finales al usuario. | Orquestador central Antigravity | Supervisa el cumplimiento estricto de `AGENTS.md`. |
+| **Doc Parser & Scriptwriter** | **Subagente Especialista** | Extrae contenidos crudos (incluyendo notas del orador) y los convierte en un guion estructurado escena por escena. | `.pptx`, `.docx`, `.pdf`. | `scenes.json`, guion de locución y lista de checkpoints evaluativos. | `raw-document-video-parser` | No omite conceptos didácticos clave; segmenta en escenas de 40 a 90 segundos. |
+| **Brand & Theme Architect** | **Subagente Especialista** | Cuantiza logotipos institucionales y extrae paletas armónicas con reglas de estilo editorial y variables CSS. | Imagen del logo institucional (`.jpg`, `.png`). | `theme_config.json`, `DESIGN.md`, variables `:root` CSS (8 colores). | `core.brand_theme` | Asegura contraste accesible (WCAG AA) y armonía cromática coherente. |
+| **Voice & Timings Specialist** | **Subagente Especialista** | Sintetiza la narración oral con entonación natural y captura eventos temporales palabra por palabra. | Guion textual de `scenes.json`, configuración de voz (`es-AR-ElenaNeural`). | `scene_XX.mp3`, `audio_timeline.json`, `word_timings.json`. | `tiktok-word-captions` y adaptador EdgeTTS | Velocidad calibrada a `-2%`; desfase temporal $\le 0.05\text{s}$ respecto a `ffprobe`. |
+| **Pre-Render QA Gatekeeper** | **Subagente de Calidad** | Audita la composición técnica antes de gastar recursos de render, bloqueando la ejecución ante inconsistencias. | `scenes.json`, audios, `audio_timeline.json`, plantilla HTML. | Reporte JSON de validación Pre-Render (`valid: true/false`). | `pre-render-composition-validator` | **Invariante 1:** Ningún checkpoint evaluativo puede cortar la alocución de la escena. |
+| **Visual Render & Outro Stitcher** | **Subagente de Producción** | Renderiza fotogramas deterministas a 24 fps, mezcla el audio estéreo con retardos exactos y ensambla el outro institucional. | Plantilla HTML/JS, fotogramas en disco, `ending_norm.mp4`, `adelay`. | Cuadros PNG en `frames/`, `audio_mixed.m4a`, `video_raw.mp4`, `*_Final.mp4`. | `modular-video-orchestrator` y `core.orchestrator` | **Invariante 3:** Reanudación desde `frames/` si un render se interrumpió; audio estéreo AAC 44.1 kHz. |
+| **Post-Render QA Gatekeeper** | **Subagente de Calidad** | Inspecciona el video final compilado mediante análisis de flujos y verificación visual de fotogramas clave. | Video final `.mp4`. | Reporte de integridad técnica, fotogramas clave extraídos. | `post-render-video-qa` | Detecta fotogramas negros, cortes de audio con `silencedetect` y desincronías. |
+| **SCORM Packager Specialist** | **Subagente de Entrega** | Empaqueta el video interactivo con listeners de tiempo, interfaz de preguntas formativas y comunicación LMS. | Video `.mp4`, lista de preguntas (`checkpoints`), metadatos de cátedra. | `*_SCORM_Completo.zip` y `*_SCORM.zip` (Zero-Weight). | `interactive-scorm-video-packager` | **Invariante 2:** Pantalla completa sobre `#player-container` (`controlsList="nofullscreen"`). |
+
+### 2.2. Matriz de Habilidades Operativas (`skills/`) (Tabla de Doble Entrada)
+
+| Habilidad (`Skill`) | Propósito Técnico | Herramientas / Librerías | Cuándo se Activa | Resultado Técnico Garantizado |
+| :--- | :--- | :--- | :--- | :--- |
+| **`raw-document-video-parser`** | Ingesta robusta de archivos docentes multiformato con extracción de notas de orador y metadatos. | `pypdf`, `pymupdf`, `pdfplumber`, `python-docx`, `python-pptx`. | Al recibir un archivo fuente (.pptx, .docx, .pdf) en la fase inicial. | Estructura JSON normalizada con títulos, conceptos y notas orales sin pérdida de texto. |
+| **`tiktok-word-captions`** | Generación de subtítulos dinámicos estilo karaoke con resaltado palabra por palabra. | `edge-tts` (eventos `WordBoundary`), formato `.ass` o inyección en DOM/Canvas. | Durante la síntesis de voz y preparación visual de la composición. | Archivo `word_timings.json` sincronizado milimétricamente con el audio final. |
+| **`modular-video-orchestrator`** | Renderizado modular por lotes de escenas para evitar saturación de memoria en videos largos. | Node.js, Puppeteer/Playwright, FFmpeg, manejo de hilos. | Al disparar el renderizado visual de la lección (HyperFrames o Canvas). | Fotogramas PNG a 24 fps cacheados en disco listos para multiplexado determinista. |
+| **`pre-render-composition-validator`** | Gate de control previo al render para detectar errores JS/CSS y sincronía de preguntas. | Headless Chromium, Playwright, analizador de árboles JSON. | Obligatoriamente antes de ejecutar el render de fotogramas. | Aprobación formal (`0` errores de consola, duraciones alineadas, checkpoints al cierre de alocución). |
+| **`post-render-video-qa`** | Auditoría posterior al ensamble del video final MP4. | `ffprobe`, `ffmpeg` (`silencedetect`, `blackdetect`, filtros de extracción). | Inmediatamente después de ensamblar el `.mp4` y antes del SCORM. | Confirmación de stream de video H.264 + audio AAC estéreo sin caídas abruptas ni pantallas negras. |
+| **`interactive-scorm-video-packager`** | Generación de paquetes SCORM 1.2 interactivos para Moodle con arquitectura Dual ZIP. | SCORM 1.2 API Wrapper, HTML5 Player seguro, generador de `imsmanifest.xml`. | Al finalizar con éxito el gate Post-Render para entrega en Moodle. | Emisión de paquete autocontenido (`_SCORM_Completo.zip`) y paquete liviano (`_SCORM.zip` < 400 KB). |
 
 ---
 
@@ -76,6 +90,8 @@ El proyecto está diseñado como un equipo de especialistas coordinados por el *
 
 ## 4. Flujo de Trabajo de Producción (Workflow E2E)
 
+### 4.1. Pasos del Flujo Operativo
+
 1. **Briefing e Ingesta:** El usuario provee un documento pedagógico (`.docx`, `.pptx`, `.pdf`) y opcionalmente un logo/sello.
 2. **Estructuración:** Se generan `scenes.json`, `theme_config.json` y `DESIGN.md`.
 3. **Locución y Cronograma:** Se sintetizan los audios de escena (`scene_XX.mp3`), `audio_timeline.json` y las marcas por palabra (`word_timings.json`).
@@ -85,6 +101,19 @@ El proyecto está diseñado como un equipo de especialistas coordinados por el *
 7. **Multiplexado y Cierre:** Unión de video con audio estéreo y concatenación con `ending_norm.mp4`.
 8. **Gate Post-Render:** Auditoría técnica de streams y descarte de pantallas negras.
 9. **Empaquetado Dual SCORM:** Emisión de `*_SCORM_Completo.zip` y `*_SCORM.zip`.
+
+### 4.2. Matriz de Flujo de Trabajo: Fases vs. Agentes y Habilidades (Tabla de Doble Entrada)
+
+| Fase del Pipeline | Agente Responsable | Habilidad Utilizada | Insumo Principal | Artefacto de Salida | Invariante Aplicada |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **1. Ingesta Didáctica** | Scriptwriter Subagent | `raw-document-video-parser` | Documento docente (`.docx`, `.pptx`, `.pdf`) | `scenes.json` | Extracción prioritaria de notas de orador |
+| **2. Identidad Visual** | Brand Architect | `core.brand_theme` | Logotipo / Isotipo | `theme_config.json`, `DESIGN.md` | Paleta de 8 colores armónicos y legibles |
+| **3. Síntesis y Marcas** | Voice Specialist | `tiktok-word-captions` | Guion de locución | `scene_XX.mp3`, `word_timings.json` | Velocidad `-2%` y eventos `WordBoundary` |
+| **4. Gate Pre-Render** | Pre-Render QA Gatekeeper | `pre-render-composition-validator` | Assets + `audio_timeline.json` | Reporte Pre-QA (`PASS`/`FAIL`) | **Invariante 1:** Checkpoints a `fin_alocucion + 0.05s` |
+| **5. Render Cuadro a Cuadro** | Engine Render | `modular-video-orchestrator` | Escenas HTML/Canvas | `frames/frame_*.png` (24 fps) | **Invariante 3:** Reanudación si `frames/` ya existe |
+| **6. Mezcla y Outro** | Outro Stitcher | `core.orchestrator` | `ending_norm.mp4`, `adelay` | `*_EducAI_Final.mp4` | Audio normalizado AAC 44.1 kHz 2ch |
+| **7. Gate Post-Render** | Post-Render QA Gatekeeper | `post-render-video-qa` | `*_EducAI_Final.mp4` | Reporte Post-QA (`PASS`/`FAIL`) | **Invariante 4:** Cero pantallas negras ni cortes de voz |
+| **8. Empaque SCORM** | SCORM Packager | `interactive-scorm-video-packager`| MP4 auditado + Checkpoints | Paquetes Dual ZIP (`.zip`) | **Invariante 2:** Fullscreen seguro sobre contenedor |
 
 ---
 
