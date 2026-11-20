@@ -1,0 +1,42 @@
+{
+  "project_name": "maquina-de-videos",
+  "architecture": "Deterministic Video Engine with Agent Orchestration and SCORM 1.2 Packaging",
+  "primary_surfaces": ["cli", "html5_player", "scorm_moodle"],
+  "entrypoints": {
+    "unified_orchestrator": "python -m core.orchestrator",
+    "scorm_packager": "python -m core.scorm.scorm_packager",
+    "doc_parser": "python -m core.parsers.doc_parser",
+    "brand_theme": "python -m core.brand_theme",
+    "pre_render_qa": "python -m core.qa.pre_render",
+    "post_render_qa": "python -m core.qa.post_render"
+  },
+  "modules": {
+    "core/brand_theme.py": "Logo quantization and 8-color palette extraction",
+    "core/parsers/doc_parser.py": "PPTX, DOCX and PDF text/notes extractor",
+    "core/captions/capcut_ass.py": "CapCut-style ASS dynamic karaoke captions generator",
+    "core/orchestrator/video_render.py": "Deterministic motion graphics card renderer with FFmpeg libass",
+    "core/orchestrator/pipeline.py": "EducAIPipeline 8-stage production engine",
+    "core/orchestrator/scene_builder.py": "Scene generator and SCORM checkpoint aligner",
+    "core/orchestrator/outro_mux.py": "Stereo audio mix (-16 LUFS) and outro stitcher",
+    "core/scorm/scorm_packager.py": "Dual ZIP SCORM 1.2 packager for Moodle LMS",
+    "core/qa/pre_render.py": "Pre-Render QA validator (Chromium headless, console errors, audio sync)",
+    "core/qa/post_render.py": "Post-Render QA validator (ffprobe streams, silencedetect, black frame check)"
+  },
+  "skills": [
+    "educational-video-producer",
+    "tiktok-word-captions",
+    "raw-document-video-parser",
+    "modular-video-orchestrator",
+    "pre-render-composition-validator",
+    "post-render-video-qa",
+    "interactive-scorm-video-packager"
+  ],
+  "invariants": [
+    "1. Checkpoints at speech end (+0.05s), never cutting voice",
+    "2. Safe fullscreen over #player-container with controlsList='nofullscreen'",
+    "3. Frame resumption from frames/ on interrupted renders",
+    "4. Mandatory Pre-Render and Post-Render QA gates",
+    "5. CapCut-style animated captions active by default (opt-out with --no-captions)",
+    "6. Interactive Visual Style Preferences Menu during briefing"
+  ]
+}

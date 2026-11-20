@@ -12,7 +12,8 @@ Desarrollado bajo la integración de **OpenMontage** y la arquitectura de agente
 2. [Arquitectura de Agentes y Habilidades](#2-arquitectura-de-agentes-y-habilidades)
 3. [Tipos de Videos que se Producen](#3-tipos-de-videos-que-se-producen)
 4. [Flujo de Trabajo de Producción (Workflow E2E)](#4-flujo-de-trabajo-de-producción-workflow-e2e)
-   * 📘 [Guía Operativa Detallada: Video Común vs. SCORM](docs/GUIA_FLUJO_PRODUCCION_VIDEOS.md)
+   * 📘 [Manual de Uso Completo](docs/MANUAL_DE_USO.md)
+   * 📗 [Guía Operativa Detallada: Video Común vs. SCORM](docs/GUIA_FLUJO_PRODUCCION_VIDEOS.md)
 5. [Invariantes de Producción y Gates de Calidad (AGENTS.md)](#5-invariantes-de-producción-y-gates-de-calidad-agentsmd)
 6. [Empaquetado SCORM 1.2 Interactivo para Moodle](#6-empaquetado-scorm-12-interactivo-para-moodle)
 7. [Uso del Orquestador Unificado (CLI & Python)](#7-uso-del-orquestador-unificado-cli--python)
@@ -201,6 +202,7 @@ maquina-de-videos/
 │   └── scorm/
 │       └── scorm_packager.py  # Generador Dual ZIP SCORM 1.2 para Moodle
 ├── docs/                      # Guías operativas e instructivos paso a paso
+│   ├── MANUAL_DE_USO.md
 │   └── GUIA_FLUJO_PRODUCCION_VIDEOS.md
 ├── films/                     # Producciones y video-clases generadas
 │   ├── cuando-el-trabajo-deja-de-ser-necesario/

@@ -1,0 +1,27 @@
+{
+  "product_name": "Máquina de Videos · EducAI",
+  "app_type": "terminal",
+  "secondary_surface": "web",
+  "theme": "catppuccin",
+  "brand_colors": {
+    "primary": "#4066c2",
+    "secondary": "#3c60b5",
+    "accent": "#facc15",
+    "alert": "#ea580c",
+    "dark_neutral": "#162237",
+    "background": "#ffffff",
+    "canvas_bg": "#0f172a",
+    "card_bg": "#1e293b"
+  },
+  "typography": {
+    "font_family_ui": "Segoe UI, -apple-system, sans-serif",
+    "font_family_captions": "Arial Black, Impact, sans-serif",
+    "font_family_code": "Consolas, monospace"
+  },
+  "voice_default": "es-AR-ElenaNeural",
+  "speech_rate_default": "-2%",
+  "video_resolution": "1920x1080",
+  "video_fps": 24,
+  "audio_sample_rate": 44100,
+  "audio_normalization_lufs": -16.0
+}
