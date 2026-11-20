@@ -1,149 +1,36 @@
 BITÁCORA DE CONTINUACIÓN — MÁQUINA DE VIDEOS · EDUCAI
-Fecha de corte: 2026-11-20 07:03 (-03:00)
-Workspace: E:\proyectos antigrtavity\maquina de videos
-Repositorio remoto: https://github.com/superpollo02/maquina-de-videos
+Fecha de actualización: 2026-11-20 10:33 (-03:00)
+Workspace: F:\proyectos antigrtavity\maquina de videos
+Repositorio remoto: https://github.com/superpollo02/maquina-de-videos (rama main)
 
 ========================================================================
-1. MOTIVO DEL CORTE
+ESTADO: INTEGRACIÓN COMPLETADA Y DESPLEGADA (HITOS M1 A M4)
 ========================================================================
-Durante la ejecución de Teamwork (run ID: 775e91c0-b6f1-46d2-b2f5-8c0dcc9826b8)
-para analizar e integrar OpenMontage en el proyecto, ocurrió un reinicio del
-servidor que detuvo todos los subagentes en curso. Esta bitácora resume lo ya
-completado y los pasos pendientes para retomar directamente en una nueva
-conversación.
 
-========================================================================
-2. LO QUE YA ESTÁ COMPLETADO Y VERIFICADO EN DISCO
-========================================================================
-A. Producción de videos e interactividad SCORM:
-- Video 3 completado:
-  films/cuando-el-trabajo-deja-de-ser-necesario/Cuando_El_Trabajo_Deja_De_Ser_Necesario_EducAI_Final.mp4
-  (414.08 s, 1080p, 24 fps, con audio mezclado y outro ending_norm.mp4).
-- Paquetes SCORM 1.2 corregidos y sincronizados al final de cada locución
-  (según audio_timeline.json: 110.4s, 228.8s, 286.3s, 404.1s), con
-  controlsList="nofullscreen", pantalla completa sobre #player-container,
-  barra de próximo checkpoint y ventana de disparo de 1.2s:
-  - films/cuando-el-trabajo-deja-de-ser-necesario/Cuando_El_Trabajo_Deja_De_Ser_Necesario_SCORM_Completo.zip
-  - films/cuando-el-trabajo-deja-de-ser-necesario/Cuando_El_Trabajo_Deja_De_Ser_Necesario_SCORM.zip
-- Registro actualizado en SESSION_CHECKPOINT.md.
+Todos los 4 pasos planificados han sido ejecutados, testeados y verificados con éxito:
 
-B. Reglas y habilidades (skills) del proyecto:
-- Creado AGENTS.md en la raíz del proyecto con 4 invariantes:
-  1) Sincronía de checkpoints SCORM al fin de locución.
-  2) Empaquetado SCORM dual y pantalla completa segura para Moodle.
-  3) Reanudación de renders inconclusos desde frames/.
-  4) Gates obligatorios Pre-Render y Post-Render.
-- Actualizado skills/interactive-scorm-video-packager/SKILL.md.
-- Creadas nuevas skills:
-  - skills/tiktok-word-captions/SKILL.md
-  - skills/pre-render-composition-validator/SKILL.md
-  - skills/post-render-video-qa/SKILL.md
+1. PASO 1 (Hito M2: Integración del Runtime y Núcleo de OpenMontage):
+   - Importación selectiva de commit 2e003e6 hacia vendor/openmontage/ (lib/, tools/, schemas/, styles/, pipeline_defs/, ink-theater/, backlot/).
+   - Creados THIRD_PARTY_LICENSES.md y vendor/openmontage/NOTICE bajo licencia AGPLv3.
+   - Dependencias instaladas y fijadas en pyproject.toml (certifi, watchfiles, pythainlp, pymupdf, pdfplumber, pytest, pytest-asyncio, pydub, numpy).
+   - Parches Windows aplicados: hyperframes_compose.py (UTF-8, probe tolerante en doctor JSON), composition_validator.py (verificación ffprobe), config_model.py y cost_tracker.py (encoding UTF-8 explícito), video_compose.py (remotion fallback y UTF-8).
+   - Implementado adaptador EdgeTTS(BaseTool) en vendor/openmontage/tools/audio/edge_tts.py con WordBoundary.
+   - Corregido core/parsers/doc_parser.py con cadena resiliente pypdf -> pymupdf -> pdfplumber.
 
-C. Avance parcial de la integración con OpenMontage (Hito M1 y base E2E):
-- Creado el documento de análisis y plan de integración (R1 / AC1):
-  docs/OPENMONTAGE_INTEGRATION_PLAN.md (361 líneas, 45.5 KB).
-  Define arquitectura, matriz de compatibilidad (Python 3.14.3, Node v24.19.0,
-  FFmpeg 9.0.2, HyperFrames 0.9.71, Windows cp1252), aislamiento en
-  vendor/openmontage/ (licencia AGPLv3, sin colisionar con skills/ ni AGENTS.md)
-  y especificación de M2, M3 y M4.
-- Creada la base inicial del carril de pruebas en tests/:
-  - tests/conftest.py
-  - tests/e2e/__init__.py
-  - tests/e2e/helpers.py
+2. PASO 2 (Hito M3: Orquestador Unificado, Gates QA y SCORM 1.2):
+   - Creado core/orchestrator/: _openmontage_env.py, scene_builder.py, outro_mux.py, pipeline.py (EducAIPipeline), __main__.py (CLI python -m core.orchestrator).
+   - Creados gates ejecutables en core/qa/: pre_render.py (validate_pre_render) y post_render.py (validate_post_render).
+   - Actualizado core/scorm/scorm_packager.py absorbiendo invariantes de AGENTS.md (controlsList="nofullscreen", fullscreen en #player-container, barra #next-checkpoint-info, ventana 1.2s, --strict-sync y Dual ZIP).
+   - Actualizada documentación operativa en skills/*/SKILL.md (modular-video-orchestrator, tiktok-word-captions, pre-render-composition-validator, post-render-video-qa, interactive-scorm-video-packager).
 
-========================================================================
-3. PASOS PENDIENTES POR EJECUTAR (EN ORDEN)
-========================================================================
-Referencia técnica principal: docs/OPENMONTAGE_INTEGRATION_PLAN.md
+3. PASO 3 (Hito M4: Verificación E2E Real Cero Mocks y No Regresión):
+   - 15 pruebas automatizadas ejecutadas y aprobadas al 100% (pytest tests -v):
+     - Nivel 1: Tests unitarios y de contratos (doc_parser, brand_theme, scorm_packager, OpenMontage lib).
+     - Nivel 2: ToolRegistry (descubrimiento de edge_tts y >= 38 herramientas locales), HyperFramesCompose (AVAILABLE), EdgeTTS (audio real y word_timings.json).
+     - Nivel 3: Flujo E2E completo con EducAIPipeline (sintetiza voz, mezcla estéreo, pre-render QA, render, multiplexado con outro ending_norm.mp4, post-render QA y Dual SCORM).
+     - Nivel 4: Verificación en vivo en headless Chrome del paquete SCORM generado (DOM, fullscreen, eventos SCORM LMSInitialize/LMSSetValue).
+     - Nivel 5: Regresión de CLI de core/ y validación de integridad ffprobe de los 3 videos existentes en films/ (Cuando el Trabajo Deja de Ser Necesario, Estructura Tripartita, Protocolo de Relevamiento).
 
-PASO 1 — Hito M2: Integración del Runtime y Núcleo de OpenMontage
-1. Clonar/importar desde https://github.com/OpenMontageInc/OpenMontage.git
-   (commit 2e003e65fa99a0f329478a2c1cdcf26bc481933a) únicamente los subconjuntos
-   aprobados hacia vendor/openmontage/:
-   lib/, tools/, schemas/, pipeline_defs/, styles/, ink-theater/, backlot/.
-   IMPORTANTE: Excluir skills/, .agents/, .claude/, .codex/, .cursor/ y .github/
-   de OpenMontage para no sobrescribir skills/ ni AGENTS.md de EducAI.
-   Incluir LICENSE (AGPLv3), NOTICE y THIRD_PARTY_LICENSES.md.
-2. Crear pyproject.toml (y/o requirements.txt) e instalar dependencias Python
-   faltantes en el entorno (certifi>=2026.10.19, watchfiles, pythainlp, pypdf,
-   pytest, pytest-asyncio).
-3. Aplicar parches de compatibilidad Windows en vendor/openmontage/
-   (encoding="utf-8", probe tolerante de npx hyperframes, fallback de
-   remotion-composer por incompatibilidad de Node v24.19.0) según sección 3.1
-   y 4.1 del plan.
-4. Implementar el adaptador EdgeTTS(BaseTool) en:
-   vendor/openmontage/tools/audio/edge_tts.py
-   (usando boundary="WordBoundary" para generar word_timings.json y
-   audio_timeline.json).
-5. Corregir el soporte de archivos PDF en core/parsers/doc_parser.py
-   (pypdf -> pymupdf -> pdfplumber).
-
-PASO 2 — Hito M3: Orquestador Unificado, Gates QA y SCORM 1.2
-1. Implementar core/__init__.py y core/orchestrator/:
-   - core/orchestrator/__init__.py
-   - core/orchestrator/_openmontage_env.py
-   - core/orchestrator/scene_builder.py
-   - core/orchestrator/pipeline.py (EducAIPipeline + CLI `python -m core.orchestrator`)
-   - core/orchestrator/outro_mux.py (normalización estéreo y concat con ending_norm.mp4)
-2. Implementar gates ejecutables en core/qa/:
-   - core/qa/__init__.py
-   - core/qa/pre_render.py (validate_pre_render)
-   - core/qa/post_render.py (validate_post_render)
-3. Actualizar core/scorm/scorm_packager.py manteniendo 100% compatibilidad
-   con su firma/CLI legacy e incorporando las invariantes de AGENTS.md
-   (controlsList="nofullscreen", fullscreen en #player-container, barra
-   #next-checkpoint-info, ventana 1.2s, --strict-sync, Dual ZIP).
-4. Actualizar referencias operativas en skills/*/SKILL.md (modular-video-orchestrator,
-   tiktok-word-captions, pre-render-composition-validator, post-render-video-qa,
-   interactive-scorm-video-packager) para documentar el nuevo CLI/QA/SCORM.
-
-PASO 3 — Hito M4: Verificación E2E Real (Cero Mocks) y No Regresión
-1. Completar los tests en tests/ (unit, contracts y e2e) usando los helpers ya
-   creados en tests/e2e/helpers.py y tests/conftest.py.
-2. Ejecutar los 5 niveles de verificación definidos en
-   docs/OPENMONTAGE_INTEGRATION_PLAN.md (sección 4.2):
-   - Nivel 1: Tests unitarios y de contratos (`python -B -m pytest tests/unit tests/contracts`).
-   - Nivel 2: ToolRegistry descubre edge_tts y >=38 herramientas locales;
-     HyperFramesCompose AVAILABLE; EdgeTTS genera audio real + timings.
-   - Nivel 3: Flujo E2E completo con `python -m core.orchestrator` (modo
-     hyperframes y modo canvas con reanudación desde frames/), validado con ffprobe.
-   - Nivel 4: Prueba de navegador real del paquete SCORM generado (playwright-core
-     + Chrome) verificando overlay, checkpoints, puntaje y API SCORM.
-   - Nivel 5: Regresión de core/ (brand_theme.py, doc_parser.py, scorm_packager.py)
-     e integridad de los 3 MP4 finales en films/.
-3. Revisar casos borde (rutas con espacios, acentos cp1252, checkpoints fuera de
-   sincro, caché fría de npx).
-
-PASO 4 — Actualización del Repositorio en GitHub (solicitado por el usuario)
-1. Resolver advertencia de ownership en Windows si aparece al correr git:
-   `git config --global --add safe.directory 'E:/proyectos antigrtavity/maquina de videos'`
-2. Revisar `git status` y asegurarse de no subir archivos temporales pesados
-   innecesarios (revisar .gitignore para __pycache__, .tmp_scorm, frames pesados
-   no deseados si aplica).
-3. Hacer commit de todo el trabajo integrado y verificado y ejecutar `git push`
-   hacia `main` en https://github.com/superpollo02/maquina-de-videos.
-
-========================================================================
-4. NOTAS Y ARCHIVOS ÚTILES DE REFERENCIA
-========================================================================
-- Plan detallado aprobado como guía técnica:
-  docs/OPENMONTAGE_INTEGRATION_PLAN.md
-- Reglas del proyecto:
-  AGENTS.md
-- Estado previo de Teamwork (solo lectura/referencia si se desea consultar):
-  C:\Users\arifi\.gemini\antigravity\brain\775e91c0-b6f1-46d2-b2f5-8c0dcc9826b8\scratch\.agents\teamwork\PROJECT.md
-- Nota sobre archivo legado:
-  En films/cuando-el-trabajo-deja-de-ser-necesario/test_browser_scorm.js:34
-  quedó un timestamp antiguo (96.6) distinto de update_scorm_robust.py (110.4);
-  no romper ni alterar films/ existentes salvo decisión explícita.
-
-========================================================================
-5. PROMPT SUGERIDO PARA LA NUEVA CONVERSACIÓN
-========================================================================
-"Lee BITACORA_CONTINUACION.txt, AGENTS.md y docs/OPENMONTAGE_INTEGRATION_PLAN.md.
-Retoma la ejecución desde el Paso 1 (Hito M2: integrar OpenMontage en
-vendor/openmontage/ y EdgeTTS), luego implementa el Paso 2 (M3:
-core/orchestrator/, core/qa/ y actualización de core/scorm/scorm_packager.py),
-ejecuta el Paso 3 (M4: suite de pruebas E2E real sin mocks y verificación de no
-regresión), y al finalizar todo y pasar las pruebas realiza el Paso 4 (commit y
-push al repositorio en GitHub)."
+4. PASO 4 (Despliegue en GitHub):
+   - Actualizado .gitignore para omitir frames pesados (frames/) y audios WAV temporales (*.wav), protegiendo cuotas de GitHub.
+   - Commit a90f381 registrado y subido exitosamente a la rama main de https://github.com/superpollo02/maquina-de-videos.
