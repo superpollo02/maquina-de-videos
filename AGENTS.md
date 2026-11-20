@@ -24,4 +24,13 @@
 - **Activos por defecto:** Toda producción de video (sea video común o video-cuestionario SCORM) incluye de forma predeterminada subtítulos dinámicos palabra por palabra estilo CapCut / TikTok generados desde `word_timings.json` con la habilidad `tiktok-word-captions`.
 - **Regla de Exclusión (Opt-Out):** Solo se desactivan los subtítulos si el usuario solicita explícitamente en el prompt expresiones como *"sin subtítulos"*, *"no pongas texto en pantalla"*, *"desactivar subtítulos"* o si se invoca con `--no-captions`.
 
+## 6. Menú Obligatorio de Preferencias de Estilo Visual (Briefing Interactivo)
+- **Consulta explícita de estilo:** Cuando el usuario inicie un nuevo video sin haber fijado un estilo gráfico concreto, el agente coordinador **debe presentar siempre el Menú de Preferencias de Estilo Visual** (mediante opciones claras o la herramienta interactiva de preguntas) antes de componer las escenas o renderizar:
+  1. *(Recomendado)* **Pizarra Didáctica / Whiteboard Explainer (`canvas`):** Dibujo progresivo trazo a mano, notas visuales y diagramas limpios (ideal para clases magistrales, conceptos paso a paso y ciencias).
+  2. **Motion Graphics & Tarjetas Modernas (`hyperframes`):** Tipografía editorial, tarjetas dinámicas, fondos con atmósfera de marca y transiciones fluidas (ideal para tecnología, gestión y cursos ejecutivos).
+  3. **Infografía Técnica & Blueprint (`blueprint`):** Esquemas en azul técnico, diagramas de flujo, despiece de procesos y arquitectura (ideal para ingeniería, sistemas y protocolos).
+  4. **Visual Sketchnote & Ilustración Editorial (`sketchnote`):** Estilo cuaderno de notas ilustrado con marcadores, texturas orgánicas y viñetas (ideal para humanidades y storytelling).
+  5. **Títeres Vectoriales Mocap (`ink_theater`):** Personajes vectoriales expresivos animados con captura de movimiento para dramatizaciones y casos prácticos.
+
+
 

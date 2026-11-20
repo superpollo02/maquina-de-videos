@@ -121,13 +121,14 @@ El proyecto está diseñado como un equipo de especialistas coordinados por el *
 
 ## 5. Invariantes de Producción y Gates de Calidad (AGENTS.md)
 
-El archivo `AGENTS.md` define 5 invariantes no negociables en todo el repositorio:
+El archivo `AGENTS.md` define 6 reglas e invariantes no negociables en todo el repositorio:
 
 1. **Sincronía de Preguntas Interactivas:** Todo bloque de preguntas (`checkpoint`) debe ubicarse al terminar la alocución de la escena (`end + 0.05s` a `+0.1s`), **nunca en medio de una frase o discurso**. La ventana de captura en el reproductor es tolerante (`curT >= cp.timestamp && curT <= cp.timestamp + 1.2`).
 2. **Pantalla Completa Segura para Moodle:** El reproductor usa `controlsList="nofullscreen"` en `<video>` y maximiza `#player-container`. Maximizar `<video>` directamente en HTML5 oculta los overlays de preguntas detrás del video.
 3. **Reanudación de Renders Inconclusos:** Si un render se interrumpe y los fotogramas PNG están en `frames/`, el sistema retoma directamente desde la codificación FFmpeg sin renderizar de nuevo los cuadros existentes.
 4. **Gates Pre-Render y Post-Render Obligatorios:** Ningún video se entrega ni se empaqueta sin pasar las validaciones de `core.qa.pre_render` y `core.qa.post_render`.
 5. **Subtítulos Dinámicos Estilo CapCut por Defecto (Opt-Out):** Todo video incluye subtítulos animados palabra por palabra a partir de `word_timings.json` con la habilidad `tiktok-word-captions`, a menos que el usuario solicite explícitamente desactivarlos (`--no-captions` o *"sin subtítulos"*).
+6. **Menú de Preferencias de Estilo Visual en Briefing:** Cuando el usuario no indica un estilo en su pedido inicial, el agente coordinador consulta interactivamente ofreciendo las 5 familias gráficas: Pizarra Didáctica, Motion Graphics, Blueprint, Sketchnote o Títeres Mocap.
 
 ---
 

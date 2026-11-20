@@ -31,6 +31,18 @@ Toda producción ejecutada bajo esta habilidad debe respetar sin excepción las 
 
 ---
 
+## 🎨 Menú Obligatorio de Preferencias de Estilo Visual
+
+Durante la etapa de briefing inicial, si el usuario no especificó el estilo gráfico, se debe presentar este menú de 5 opciones para su elección:
+
+1. **(Recomendado) Pizarra Didáctica / Whiteboard Explainer (`canvas`):** Trazos progresivos a mano alzada, notas visuales y diagramas vectoriales limpios (ideal para conceptos paso a paso, ciencias y clases magistrales).
+2. **Motion Graphics & Tarjetas Modernas (`hyperframes`):** Tipografía editorial, tarjetas dinámicas, fondos con atmósfera de marca y transiciones fluidas (ideal para tecnología, gestión y cursos ejecutivos).
+3. **Infografía Técnica & Blueprint (`blueprint`):** Esquemas en azul técnico, diagramas de flujo, despiece de procesos y arquitectura (ideal para ingeniería, sistemas y protocolos).
+4. **Visual Sketchnote & Ilustración Editorial (`sketchnote`):** Estilo cuaderno de notas ilustrado con marcadores, texturas orgánicas y viñetas (ideal para humanidades y storytelling).
+5. **Títeres Vectoriales Mocap (`ink_theater`):** Personajes vectoriales expresivos animados con captura de movimiento para dramatizaciones y casos prácticos.
+
+---
+
 ## 🚀 Caminos Críticos y Errores Resueltos (Golden Path)
 
 * **Rutas en Windows para libass:**  

@@ -55,7 +55,19 @@ El sistema opera bajo una arquitectura de **Agente Principal y Subagentes Especi
 
 ---
 
-## 2. Política de Subtítulos Dinámicos Estilo CapCut (Por Defecto)
+## 2. Menú de Preferencias de Estilo Visual (Briefing Interactivo)
+
+Cuando el docente o usuario no especifica el estilo gráfico en su solicitud inicial, el **Antigravity Coordinator** debe presentar el menú de **5 familias de estilos gráficos** para su elección:
+
+1. **(Recomendado) Pizarra Didáctica / Whiteboard Explainer (`canvas`):** Dibujo progresivo a mano alzada, notas visuales y diagramas vectoriales limpios sobre pizarra. Ideal para conceptos paso a paso, ciencias y clases magistrales.
+2. **Motion Graphics & Tarjetas Modernas (`hyperframes`):** Tarjetas dinámicas con transiciones fluidas, tipografía editorial moderna, diseño oscuro o claro con paleta institucional. Ideal para tecnología, gestión y cursos ejecutivos.
+3. **Infografía Técnica & Blueprint (`blueprint`):** Esquemas en azul técnico, diagramas de flujo, despiece de procesos y arquitectura. Ideal para ingeniería, sistemas y protocolos.
+4. **Visual Sketchnote & Ilustración Editorial (`sketchnote`):** Estilo cuaderno de notas ilustrado con marcadores, texturas orgánicas y viñetas. Ideal para humanidades y storytelling.
+5. **Títeres Vectoriales Mocap (`ink_theater`):** Personajes vectoriales expresivos animados con captura de movimiento para dramatizaciones y casos prácticos.
+
+---
+
+## 3. Política de Subtítulos Dinámicos Estilo CapCut (Por Defecto)
 
 ### ¿Qué son y cómo se ven?
 Inspirados en el estándar visual de CapCut, TikTok e Instagram Reels, los subtítulos dinámicos de EducAI se generan a través de la habilidad `tiktok-word-captions`:
