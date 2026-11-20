@@ -1,275 +1,188 @@
 # Máquina de Videos · EducAI
 
-Estudio y motor generador de videos explicativos e instructivos en código (Canvas 2D / WebGL / Three.js / HTML5 + Síntesis de Audio y TTS). Impulsado por la arquitectura **Lemo-Opuscar** y **Google Antigravity**.
+Estudio y motor generador de videos educativos, interactivos y explicativos en código determinista (**HyperFrames / Canvas 2D / Three.js / SVG Mocap / FFmpeg** + **Síntesis TTS y Evaluación SCORM 1.2 para Moodle**).
+
+Desarrollado bajo la integración de **OpenMontage** y la arquitectura de agentes de **Google Antigravity**.
 
 ---
 
 ## 📚 Índice de Contenidos
-1. [Requisitos y Configuración del Sistema](#1-requisitos-y-configuración-del-sistema)
-2. [Arquitectura y Filosofía del Pipeline](#2-arquitectura-y-filosofía-del-pipeline)
-3. [Tutorial Paso a Paso: Cómo Crear un Video](#3-tutorial-paso-a-paso-cómo-crear-un-video)
-   - [Paso 1: Guion y Tratamiento (`TREATMENT.md`)](#paso-1-guion-y-tratamiento-treatmentmd)
-   - [Paso 2: Generación de Voz en Off y Subtítulos (TTS)](#paso-2-generación-de-voz-en-off-y-subtítulos-tts)
-   - [Paso 3: Composición de Música y Foley Acústico](#paso-3-composición-de-música-y-foley-acústico)
-   - [Paso 4: Maquetación del Lienzo Dinámico (`index.html`)](#paso-4-maquetación-del-lienzo-dinámico-indexhtml)
-   - [Paso 5: Renderizado Cuadro a Cuadro a 24 FPS](#paso-5-renderizado-cuadro-a-cuadro-a-24-fps)
-   - [Paso 6: Ensamble, Multiplexado y Outro Institucional](#paso-6-ensamble-multiplexado-y-outro-institucional)
-4. [Catálogo de Estilos Visuales Disponibles (99 Estilos)](#4-catálogo-de-estilos-visuales-disponibles)
-5. [Buenas Prácticas y Resolución de Problemas](#5-buenas-prácticas-y-resolución-de-problemas)
+
+1. [Visión General y Principio de Determinismo](#1-visión-general-y-principio-de-determinismo)
+2. [Arquitectura de Agentes y Habilidades](#2-arquitectura-de-agentes-y-habilidades)
+3. [Tipos de Videos que se Producen](#3-tipos-de-videos-que-se-producen)
+4. [Flujo de Trabajo de Producción (Workflow E2E)](#4-flujo-de-trabajo-de-producción-workflow-e2e)
+5. [Invariantes de Producción y Gates de Calidad (AGENTS.md)](#5-invariantes-de-producción-y-gates-de-calidad-agentsmd)
+6. [Empaquetado SCORM 1.2 Interactivo para Moodle](#6-empaquetado-scorm-12-interactivo-para-moodle)
+7. [Uso del Orquestador Unificado (CLI & Python)](#7-uso-del-orquestador-unificado-cli--python)
+8. [Estructura del Proyecto](#8-estructura-del-proyecto)
+9. [Suite de Verificación y Pruebas E2E (Cero Mocks)](#9-suite-de-verificación-y-pruebas-e2e-cero-mocks)
 
 ---
 
-## 1. Requisitos y Configuración del Sistema
+## 1. Visión General y Principio de Determinismo
 
-Para operar el estudio y renderizar videos en alta resolución (1080p a 24/30/60 fps) se requieren los siguientes componentes:
+A diferencia de las herramientas tradicionales de IA generativa de video que alucinan píxeles impredecibles y texto ilegible, esta máquina de video opera bajo el principio:
 
-### Herramientas del Sistema (CLI / Binarios)
-- **Node.js (v20+):** Motor de ejecución para automatizar el navegador headless y orquestar las escenas.
-- **Google Chrome o Microsoft Edge:** Navegador Chromium utilizado por Playwright / Puppeteer en modo `--headless` para rasterizar cada fotograma.
-- **FFmpeg (v7.0+):** Codificador multimedia para componer audio multicanal, compresión de video H.264 (libx264) y multiplexado final.
-- **Python (3.11+):** Para síntesis de audio, generación de ondas sonoras y llamado a servicios de TTS.
+$$\text{Video}(t) = \text{LienzoCódigo}(t) \quad \oplus \quad \text{AudioSincronizado}(t)$$
 
-### Dependencias de Paquetes
-- **NPM:**
-  ```bash
-  npm install playwright-core
-  ```
-- **Python:**
-  ```bash
-  pip install edge-tts
-  ```
+* **100% Determinista:** Cualquier cuadro al segundo `t = 28.5s` se reproduce idéntico en cualquier computadora.
+* **Tipografía y Gráficos Nítidos:** Los textos, diagramas vectoriales, logotipos institucionales y tablas conservan precisión vectorial milimétrica.
+* **Sincronía Palabra por Palabra:** Cada elemento visual se anima exactamente en el segundo y milisegundo en que la voz en off lo pronuncia.
 
 ---
 
-## 2. Arquitectura y Filosofía del Pipeline
+## 2. Arquitectura de Agentes y Habilidades
 
-A diferencia de las herramientas tradicionales de IA generativa de video (que inventan píxeles impredecibles y texto ilegible), esta máquina de video opera bajo el principio:
-
-> **"La imagen es una función matemática determinista del tiempo: `render(t)`"**
+El proyecto está diseñado como un equipo de especialistas coordinados por el **Agente Principal Antigravity**:
 
 ```
-                     ┌──────────────────┐
-                     │ Texto / Contenido│
-                     └────────┬─────────┘
-                              │
-               ┌──────────────┴──────────────┐
-               ▼                             ▼
-       [Audio & Tiempo]              [Lienzo Visual]
-      edge-tts (Locución)           HTML5 Canvas / CSS
-               │                             │
-    Marcas de tiempo (.json)         window.render(t)
-               │                             │
-    Pista musical sintetizada                │
-               │                             │
-       Mezcla (FFmpeg)                       │
-               │                             │
-               ▼                             ▼
-        audio_mixed.m4a              Frames PNG (Playwright)
-               │                             │
-               └──────────────┬──────────────┘
-                              ▼
-                  video_raw.mp4 (libx264)
-                              │
-                              ▼
-                + ending. educai.mp4 (Concat)
-                              │
-                              ▼
-                   VIDEO_FINAL_1080P.mp4
+[Usuario / Docente]
+        │
+        ▼ (Prompt en lenguaje natural o CLI)
+[Antigravity Coordinator] ──────────────────────────────────────────┐
+        │                                                           │
+        ├──► Document Ingestion (`core.parsers.doc_parser`)         │
+        ├──► Brand & Theme Architect (`core.brand_theme`)           ▼
+        ├──► Voice & Timings (`vendor.openmontage.tools.audio`) ── [ToolRegistry]
+        ├──► Pre-Render QA Gate (`core.qa.pre_render`)             (165 herramientas)
+        ├──► Multi-Engine Visual Render (`hyperframes`/`canvas`)    │
+        ├──► Audio Mix & Outro Stitcher (`core.orchestrator`)       │
+        ├──► Post-Render QA Gate (`core.qa.post_render`)            │
+        └──► Interactive SCORM Packager (`core.scorm`) ─────────────┘
 ```
 
-### Ventajas de este enfoque:
-- **100% Determinista:** Cualquier cuadro a los `t = 28.5s` se reproduce idéntico en cualquier máquina.
-- **Tipografía y Gráficos Nítidos:** Sin distorsiones; textos, diagramas vectoriales, logos y tablas conservan precisión milimétrica.
-- **Sincronización Exacta:** Cada elemento visual se dibuja exactamente en el segundo y milisegundo en que la voz lo pronuncia.
+### Funciones de los Componentes:
+
+1. **Document Ingestion (`doc_parser.py`):** Ingesta diapositivas `.pptx` (extrayendo notas del orador), documentos `.docx` y archivos `.pdf` mediante una cadena tolerante de extracción (`pypdf` $\to$ `pymupdf` $\to$ `pdfplumber`).
+2. **Brand & Theme Extractor (`brand_theme.py`):** Cuantiza imágenes de logotipos institucionales y extrae una paleta armónica de 8 colores y reglas tipográficas para generar `DESIGN.md` y variables CSS `:root`.
+3. **Voice & Word Captions (`edge_tts.py` / `tiktok-word-captions`):** Locución en español argentino (`es-AR-ElenaNeural`) a `-2%` de velocidad. Captura eventos `WordBoundary` para generar `word_timings.json` y subtítulos dinámicos estilo TikTok/karaoke.
+4. **Pre-Render QA Validator (`pre_render.py`):** Verifica que no haya errores de consola en 5 puntos de tiempo evaluados en Chromium headless (Playwright), valida coincidencia de duración de audio y bloquea renders si una pregunta corta la voz docente.
+5. **Outro Mux (`outro_mux.py`):** Garantiza salida AAC estéreo a 44.1 kHz (2 canales) normalizada a $-16\text{ LUFS}$ y concatena el cierre institucional `ending_norm.mp4`.
+6. **Post-Render QA Auditor (`post_render.py`):** Audita con `ffprobe` e inspección visual de fotogramas clave que el MP4 final cumpla con el estándar H.264/AAC y que `silencedetect` no revele cortes abruptos de alocución.
+7. **Interactive SCORM Packager (`scorm_packager.py`):** Empaqueta la video-clase en paquetes SCORM 1.2 interactivos para Moodle con soporte **Dual ZIP**.
 
 ---
 
-## 3. Tutorial Paso a Paso: Cómo Crear un Video
+## 3. Tipos de Videos que se Producen
 
-A continuación se detalla el procedimiento estándar utilizado para producir los videos de la plataforma.
-
-### Paso 1: Guion y Tratamiento (`TREATMENT.md`)
-Todo proyecto comienza creando una subcarpeta dentro de `films/<nombre-del-proyecto>/`.
-1. Redacta el guion estructurado en bloques de ideas claras.
-2. Define los colores del marcador, el estilo visual (ej. `whiteboard`, `iso-infographic`, `blueprint`) y el ritmo pedagógico.
-3. Ejemplo de archivo: `films/mi-proyecto/TREATMENT.md`.
-
-### Paso 2: Generación de Voz en Off y Subtítulos (TTS)
-La voz se genera mediante `edge-tts` dividida en segmentos para extraer su duración exacta con `ffprobe`.
-
-```python
-# gen_audio.py
-import asyncio, subprocess, json, edge_tts
-
-segments = [
-    ("seg_01", "Texto del primer bloque temático..."),
-    ("seg_02", "Texto del segundo bloque temático...")
-]
-
-async def main():
-    total_t = 0.0
-    meta = []
-    for name, text in segments:
-        file = f"{name}.mp3"
-        # Voz rioplatense femenina
-        c = edge_tts.Communicate(text, "es-AR-ElenaNeural", rate="-2%")
-        await c.save(file)
-        
-        dur = float(subprocess.check_output([
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", file
-        ]).decode().strip())
-        
-        meta.append({"name": name, "start": total_t, "duration": dur, "end": total_t + dur})
-        total_t += dur + 0.45 # Pausa pedagógica
-        
-    with open("timing.json", "w", encoding="utf-8") as f:
-        json.dump({"total": total_t, "segments": meta}, f, indent=2)
-
-asyncio.run(main())
-```
-
-### Paso 3: Composición de Música y Foley Acústico
-Se genera una base instrumental armónica minimalista (marimba / piano suave a 116-120 BPM) calculada a la duración total del video:
-
-```python
-# gen_music.py
-import math, wave, struct
-
-sr = 44100
-dur = 168.0 # Duración en segundos
-# Síntesis matemática senoidal con decaimiento exponencial (timbre marimba)
-...
-```
-
-Luego se combinan la voz y la música con FFmpeg aplicando ducking/volumen balanceado:
-```bash
-ffmpeg -y -i narration.wav -i music.wav -filter_complex "[1:a]volume=0.18[bg];[0:a][bg]amix=inputs=2:duration=first[out]" -map "[out]" -c:a aac -b:a 192k audio_mixed.m4a
-```
-
-### Paso 4: Maquetación del Lienzo Dinámico (`index.html`)
-Se crea una página web autónoma de **1920x1080** con una función global `window.render(t)`.
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body, canvas { width:1920px; height:1080px; overflow:hidden; background:#ffffff; }
-  </style>
-</head>
-<body>
-  <canvas id="stage" width="1920" height="1080"></canvas>
-  <script>
-    const canvas = document.getElementById('stage');
-    const ctx = canvas.getContext('2d');
-
-    // Función de interpolación suave
-    function smoothstep(min, max, t) {
-      let x = Math.max(0, Math.min(1, (t - min) / (max - min)));
-      return x * x * (3 - 2 * x);
-    }
-
-    window.render = function(t) {
-      ctx.clearRect(0, 0, 1920, 1080);
-      
-      // Fondo y textura de pizarra
-      ...
-      
-      // Acto 1 (0 a 30s): Dibujar diagramas con t
-      let a1 = smoothstep(0.5, 3.0, t);
-      ctx.fillStyle = `rgba(2, 132, 199, ${a1})`;
-      ctx.fillText("Título del Módulo", 200, 150);
-      
-      // Subtítulos dinámicos basados en t
-      drawSubtitles(t);
-    };
-  </script>
-</body>
-</html>
-```
-
-### Paso 5: Renderizado Cuadro a Cuadro a 24 FPS
-Para evitar problemas de cuelgues o pérdidas de sincronización por pipes de memoria, los fotogramas se capturan en disco y luego se ensamblan con FFmpeg:
-
-```javascript
-// render_frames.js
-const { chromium } = require('playwright-core');
-const { spawn } = require('child_process');
-const path = require('path');
-const fs = require('fs');
-
-async function main() {
-  const fps = 24;
-  const dur = 165.87;
-  const totalFrames = Math.floor(dur * fps);
-  const framesDir = path.join(__dirname, 'frames');
-  if (!fs.existsSync(framesDir)) fs.mkdirSync(framesDir);
-
-  const browser = await chromium.launch({
-    executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-    headless: true
-  });
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
-  await page.goto('file:///' + path.join(__dirname, 'index.html').replace(/\\/g, '/'));
-
-  for (let f = 0; f < totalFrames; f++) {
-    const framePath = path.join(framesDir, `frame_${String(f).padStart(5, '0')}.png`);
-    if (!fs.existsSync(framePath)) {
-      const t = f / fps;
-      await page.evaluate((time) => window.render(time), t);
-      await page.screenshot({ path: framePath });
-    }
-  }
-  await browser.close();
-
-  // Codificación a video MP4
-  spawn('ffmpeg', [
-    '-y', '-r', fps.toString(),
-    '-i', path.join(framesDir, 'frame_%05d.png'),
-    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'fast', '-crf', '18',
-    'video_raw.mp4'
-  ]);
-}
-main();
-```
-
-### Paso 6: Ensamble, Multiplexado y Outro Institucional
-1. **Unir Video y Audio del explicador:**
-   ```bash
-   ffmpeg -y -i video_raw.mp4 -i audio_mixed.m4a -c:v copy -c:a aac -b:a 192k whiteboard_with_audio.mp4
-   ```
-
-2. **Concatenar con el Outro Institucional EducAI:**
-   Se crea un archivo `concat_list.txt`:
-   ```
-   file 'whiteboard_with_audio.mp4'
-   file 'ending_norm.mp4'
-   ```
-   Y se genera la copia final sin pérdida:
-   ```bash
-   ffmpeg -y -f concat -safe 0 -i concat_list.txt -c copy VIDEO_FINAL_1080P.mp4
-   ```
+1. **Whiteboard / Pizarra Explicativa:** Dibujo progresivo de diagramas, conceptos clave, subrayados y notas visuales sincronizadas con la voz en off.
+2. **Kinetic Typography & Motion Graphics (HyperFrames):** Composiciones HTML/CSS/GSAP con entradas, tarjetas interactivas y subtítulos con resaltado activo palabra por palabra.
+3. **Animación con Títeres SVG (Ink Theater):** Personajes vectoriales expresivos animados mediante 12 clips de captura de movimiento (mocap CMU) y tipografía de trazo a mano.
+4. **Infografías 3D e Ilustración Espacial (Three.js):** Diagramas dimensionales y rotaciones espaciales sobre WebGL.
+5. **Video-Clases Interactivas SCORM 1.2:** Videos que pausan en puntos clave para plantear preguntas formativas que califican al estudiante en Moodle LMS.
 
 ---
 
-## 4. Catálogo de Estilos Visuales Disponibles
+## 4. Flujo de Trabajo de Producción (Workflow E2E)
 
-El motor cuenta con **99 estilos visuales** en código categorizados en:
-- **Sketch & Board:** `whiteboard` (Pizarra blanca explicativa), `chalkboard` (Pizarra tiza), `sketchnote` (Apuntes visuales), `ipad-sketch`.
-- **Line Diagrams & Blueprint:** `blueprint` (Plano técnico azul), `iso-infographic` (Infografía isométrica 3D), `exploded-teardown` (Despiece técnico), `instruction-manual` (Manual estilo IKEA).
-- **Screens & Interfaces:** `dark-keynote` (Lanzamiento tecnológico estilo Apple), `app-flythrough` (Recorrido de UI de aplicaciones), `spreadsheet-film`.
-- **Traditional Crafts & Art:** `chinese-ink` (Aguada oriental), `ukiyo-e` (Grabado japonés), `paper-cut` (Papel calado), `risograph`.
-- **Data & Maps:** `data-storytelling` (Gráficos interactivos dinámicos), `transit-map` (Líneas tipo metro).
+1. **Briefing e Ingesta:** El usuario provee un documento pedagógico (`.docx`, `.pptx`, `.pdf`) y opcionalmente un logo/sello.
+2. **Estructuración:** Se generan `scenes.json`, `theme_config.json` y `DESIGN.md`.
+3. **Locución y Cronograma:** Se sintetizan los audios de escena (`scene_XX.mp3`), `audio_timeline.json` y las marcas por palabra (`word_timings.json`).
+4. **Mezcla Estéreo:** Se aplica `adelay` milimétrico para respetar los silencios entre escenas y se normaliza el audio estéreo (`audio_mixed.m4a`).
+5. **Gate Pre-Render:** Validación automática antes de renderizar (bloquea la ejecución ante inconsistencias).
+6. **Renderizado de Cuadros:** Renderizado acelerado mediante HyperFrames o motor Canvas determinista a 24 fps con reanudación desde `frames/`.
+7. **Multiplexado y Cierre:** Unión de video con audio estéreo y concatenación con `ending_norm.mp4`.
+8. **Gate Post-Render:** Auditoría técnica de streams y descarte de pantallas negras.
+9. **Empaquetado Dual SCORM:** Emisión de `*_SCORM_Completo.zip` y `*_SCORM.zip`.
 
 ---
 
-## 5. Buenas Prácticas y Resolución de Problemas
+## 5. Invariantes de Producción y Gates de Calidad (AGENTS.md)
 
-1. **Gestión de Memoria en Renders Largos:**
-   - Para videos de más de 60 segundos (>1500 cuadros), guardar cuadros temporales en una subcarpeta `frames/` garantiza que si se interrumpe el proceso, este se reanuda sin perder el avance.
-2. **Normalización de Formato para Concat:**
-   - Los videos a concatenar deben compartir la misma resolución (`1920x1080`), tasa de cuadros (`24 fps`) y formato de audio (`44100 Hz stereo / mono`).
-3. **Subtítulos Quemados e Inclusivos:**
-   - Reservar siempre el 12% inferior del fotograma libre de información crítica para que los subtítulos no tapen diagramas ni textos explicativos.
+El archivo `AGENTS.md` define 4 invariantes no negociables en todo el repositorio:
+
+1. **Sincronía de Preguntas Interactivas:** Todo bloque de preguntas (`checkpoint`) debe ubicarse al terminar la alocución de la escena (`end + 0.05s` a `+0.1s`), **nunca en medio de una frase o discurso**. La ventana de captura en el reproductor es tolerante (`curT >= cp.timestamp && curT <= cp.timestamp + 1.2`).
+2. **Pantalla Completa Segura para Moodle:** El reproductor usa `controlsList="nofullscreen"` en `<video>` y maximiza `#player-container`. Maximizar `<video>` directamente en HTML5 oculta los overlays de preguntas detrás del video.
+3. **Reanudación de Renders Inconclusos:** Si un render se interrumpe y los fotogramas PNG están en `frames/`, el sistema retoma directamente desde la codificación FFmpeg sin renderizar de nuevo los cuadros existentes.
+4. **Gates Pre-Render y Post-Render Obligatorios:** Ningún video se entrega ni se empaqueta sin pasar las validaciones de `core.qa.pre_render` y `core.qa.post_render`.
+
+---
+
+## 6. Empaquetado SCORM 1.2 Interactivo para Moodle
+
+El empaquetador genera una arquitectura **Dual ZIP**:
+
+* **Autocontenido (`*_SCORM_Completo.zip`):** Incluye `index.html`, `imsmanifest.xml` declarando `<file href="video.mp4"/>` y el archivo `.mp4` adentro, para servidores Moodle con cuota de subida suficiente.
+* **Zero-Weight (`*_SCORM.zip`):** Paquete ultraliviano ($< 400\text{ KB}$) que apunta a un servidor HTTP/CDN externo con soporte de *byte-range*, ideal para superar límites de subida de 10-20 MB en campus universitarios.
+
+---
+
+## 7. Uso del Orquestador Unificado (CLI & Python)
+
+### Invocación por Línea de Comandos:
+
+```powershell
+# Ejecutar el pipeline completo hacia video final y SCORM Dual
+python -m core.orchestrator `
+  --project-dir "films/mi-leccion" `
+  --doc "documento.docx" `
+  --theme-image "sello educai.jpg" `
+  --render-mode hyperframes `
+  --title "Introducción a la IA" `
+  --voice "es-AR-ElenaNeural"
+```
+
+### Empaquetado SCORM independiente:
+
+```powershell
+python -m core.scorm.scorm_packager `
+  --title "Protocolo de Relevamiento EducAI" `
+  --video-url "Protocolo_EducAI_Final.mp4" `
+  --include-video "films/protocolo/Protocolo_EducAI_Final.mp4" `
+  --checkpoints-json "checkpoints.json" `
+  --audio-timeline "audio_timeline.json" `
+  --strict-sync `
+  --dual-zip `
+  --output "Protocolo_SCORM_Completo.zip"
+```
+
+---
+
+## 8. Estructura del Proyecto
+
+```
+maquina-de-videos/
+├── AGENTS.md                  # Reglas e invariantes estrictas de producción
+├── THIRD_PARTY_LICENSES.md    # Licencias de OpenMontage (AGPLv3), Patrick Hand, etc.
+├── pyproject.toml             # Configuración de dependencias y suite de pytest
+├── core/
+│   ├── brand_theme.py         # Extracción de paleta de 8 colores desde logos
+│   ├── parsers/doc_parser.py  # Ingesta de PPTX, DOCX y PDF
+│   ├── qa/
+│   │   ├── pre_render.py      # Gate de calidad previo al renderizado
+│   │   └── post_render.py     # Gate de calidad posterior al renderizado
+│   ├── orchestrator/
+│   │   ├── pipeline.py        # EducAIPipeline (orquestador de 8 fases)
+│   │   ├── scene_builder.py   # Constructor de escenas y alineador SCORM
+│   │   └── outro_mux.py       # Multiplexado estéreo y ensamble con ending_norm.mp4
+│   └── scorm/
+│       └── scorm_packager.py  # Generador Dual ZIP SCORM 1.2 para Moodle
+├── films/                     # Producciones y video-clases generadas
+│   ├── cuando-el-trabajo-deja-de-ser-necesario/
+│   ├── estructura-tripartita/
+│   └── protocolo-relevamiento/
+├── skills/                    # Especificaciones operativas de habilidades
+├── tests/                     # Suite de pruebas E2E (Unit, Contratos, Chrome)
+│   ├── unit/                  # Tests unitarios y de ToolRegistry
+│   └── e2e/                   # Pipeline E2E real, regresión y navegador Chrome
+└── vendor/
+    └── openmontage/           # Runtime aislado de OpenMontage (165 herramientas)
+```
+
+---
+
+## 9. Suite de Verificación y Pruebas E2E (Cero Mocks)
+
+El proyecto incluye 15 pruebas automatizadas que cubren 5 niveles de verificación técnica:
+
+```powershell
+# Ejecutar la suite completa de pruebas
+python -m pytest tests -v
+```
+
+* **Nivel 1:** Tests unitarios y contratos de parseo (`.pptx`, `.docx`, `.pdf`), paleta y SCORM.
+* **Nivel 2:** Descubrimiento de `edge_tts` y más de 38 herramientas locales en `ToolRegistry`, disponibilidad de `HyperFramesCompose` en Windows y síntesis real de voz con `WordBoundary`.
+* **Nivel 3:** Flujo completo E2E con generación de video final y concatenación con `ending_norm.mp4`.
+* **Nivel 4:** Verificación en navegador Chrome real (*headless*) con Playwright de los eventos DOM, listeners y API SCORM 1.2 (`LMSInitialize`, `LMSSetValue`, `LMSCommit`, `LMSFinish`).
+* **Nivel 5:** No regresión de interfaces CLI e integridad de los 3 videos finales existentes en `films/`.
