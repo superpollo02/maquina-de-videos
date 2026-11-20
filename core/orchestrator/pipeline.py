@@ -43,6 +43,7 @@ class EducAIPipeline:
         render_mode: str = "hyperframes",
         scorm_title: Optional[str] = None,
         voice: str = "es-AR-ElenaNeural",
+        captions: bool = True,
         outro_path: Optional[str | Path] = None,
         dual_scorm: bool = True,
         skip_render: bool = False,
@@ -50,7 +51,7 @@ class EducAIPipeline:
         """Execute all stages of the EducAI pipeline."""
         start_time = time.time()
         print(f"\n[Pipeline] Starting EducAI pipeline in: {self.project_dir}")
-        print(f"[Pipeline] Mode: {render_mode} | Voice: {voice}")
+        print(f"[Pipeline] Mode: {render_mode} | Voice: {voice} | Captions: {'ON (CapCut-style)' if captions else 'OFF'}")
 
         # --- Stage 1: Ingestion & Branding ---
         brand_theme: dict[str, Any] = {}
@@ -85,7 +86,7 @@ class EducAIPipeline:
             "output_dir": str(self.project_dir),
             "voice": voice,
             "rate": "-2%",
-            "emit_word_boundaries": True,
+            "emit_word_boundaries": captions,
         })
         if not tts_res.success:
             raise RuntimeError(f"EdgeTTS narration synthesis failed: {tts_res.error}")
@@ -297,6 +298,7 @@ def main() -> None:
     parser.add_argument("--render-mode", "-m", default="hyperframes", choices=["hyperframes", "canvas", "ffmpeg", "threejs", "ink_theater"])
     parser.add_argument("--title", help="Title for video and SCORM package")
     parser.add_argument("--voice", default="es-AR-ElenaNeural", help="EdgeTTS voice")
+    parser.add_argument("--no-captions", action="store_true", help="Disable default CapCut-style animated captions")
     parser.add_argument("--outro", help="Path to outro MP4 to concatenate")
     parser.add_argument("--skip-render", action="store_true", help="Skip re-rendering video_raw.mp4")
     parser.add_argument("--no-dual-scorm", action="store_true", help="Disable dual SCORM packaging")
@@ -310,6 +312,7 @@ def main() -> None:
         render_mode=args.render_mode,
         scorm_title=args.title,
         voice=args.voice,
+        captions=not args.no_captions,
         outro_path=args.outro,
         dual_scorm=not args.no_dual_scorm,
         skip_render=args.skip_render,

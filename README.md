@@ -12,6 +12,7 @@ Desarrollado bajo la integración de **OpenMontage** y la arquitectura de agente
 2. [Arquitectura de Agentes y Habilidades](#2-arquitectura-de-agentes-y-habilidades)
 3. [Tipos de Videos que se Producen](#3-tipos-de-videos-que-se-producen)
 4. [Flujo de Trabajo de Producción (Workflow E2E)](#4-flujo-de-trabajo-de-producción-workflow-e2e)
+   * 📘 [Guía Operativa Detallada: Video Común vs. SCORM](docs/GUIA_FLUJO_PRODUCCION_VIDEOS.md)
 5. [Invariantes de Producción y Gates de Calidad (AGENTS.md)](#5-invariantes-de-producción-y-gates-de-calidad-agentsmd)
 6. [Empaquetado SCORM 1.2 Interactivo para Moodle](#6-empaquetado-scorm-12-interactivo-para-moodle)
 7. [Uso del Orquestador Unificado (CLI & Python)](#7-uso-del-orquestador-unificado-cli--python)
@@ -119,12 +120,13 @@ El proyecto está diseñado como un equipo de especialistas coordinados por el *
 
 ## 5. Invariantes de Producción y Gates de Calidad (AGENTS.md)
 
-El archivo `AGENTS.md` define 4 invariantes no negociables en todo el repositorio:
+El archivo `AGENTS.md` define 5 invariantes no negociables en todo el repositorio:
 
 1. **Sincronía de Preguntas Interactivas:** Todo bloque de preguntas (`checkpoint`) debe ubicarse al terminar la alocución de la escena (`end + 0.05s` a `+0.1s`), **nunca en medio de una frase o discurso**. La ventana de captura en el reproductor es tolerante (`curT >= cp.timestamp && curT <= cp.timestamp + 1.2`).
 2. **Pantalla Completa Segura para Moodle:** El reproductor usa `controlsList="nofullscreen"` en `<video>` y maximiza `#player-container`. Maximizar `<video>` directamente en HTML5 oculta los overlays de preguntas detrás del video.
 3. **Reanudación de Renders Inconclusos:** Si un render se interrumpe y los fotogramas PNG están en `frames/`, el sistema retoma directamente desde la codificación FFmpeg sin renderizar de nuevo los cuadros existentes.
 4. **Gates Pre-Render y Post-Render Obligatorios:** Ningún video se entrega ni se empaqueta sin pasar las validaciones de `core.qa.pre_render` y `core.qa.post_render`.
+5. **Subtítulos Dinámicos Estilo CapCut por Defecto (Opt-Out):** Todo video incluye subtítulos animados palabra por palabra a partir de `word_timings.json` con la habilidad `tiktok-word-captions`, a menos que el usuario solicite explícitamente desactivarlos (`--no-captions` o *"sin subtítulos"*).
 
 ---
 
@@ -142,7 +144,7 @@ El empaquetador genera una arquitectura **Dual ZIP**:
 ### Invocación por Línea de Comandos:
 
 ```powershell
-# Ejecutar el pipeline completo hacia video final y SCORM Dual
+# Ejecutar el pipeline completo hacia video final y SCORM Dual (con subtítulos CapCut por defecto)
 python -m core.orchestrator `
   --project-dir "films/mi-leccion" `
   --doc "documento.docx" `
@@ -150,6 +152,13 @@ python -m core.orchestrator `
   --render-mode hyperframes `
   --title "Introducción a la IA" `
   --voice "es-AR-ElenaNeural"
+
+# Si el usuario solicita explícitamente desactivar los subtítulos:
+python -m core.orchestrator `
+  --project-dir "films/mi-leccion" `
+  --doc "documento.docx" `
+  --no-captions `
+  --title "Introducción a la IA"
 ```
 
 ### Empaquetado SCORM independiente:

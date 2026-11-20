@@ -20,3 +20,8 @@
 - **Pre-Render (`pre-render-composition-validator`):** Antes de renderizar fotogramas, validar existencia de assets, coincidencia de duración entre `audio_mixed.m4a` / `audio_timeline.json` y `render_frames.js`, cero errores JS en headless Chrome y sincronía de checkpoints SCORM al fin de locución.
 - **Post-Render (`post-render-video-qa`):** Después de generar el MP4 final y antes de entregar, extraer fotogramas clave con FFmpeg e inspeccionarlos visualmente (fondos, subtítulos, márgenes) junto con verificación `ffprobe` de audio/video sin cortes abruptos.
 
+## 5. Subtítulos Dinámicos Estilo CapCut por Defecto (Invariante Opt-Out)
+- **Activos por defecto:** Toda producción de video (sea video común o video-cuestionario SCORM) incluye de forma predeterminada subtítulos dinámicos palabra por palabra estilo CapCut / TikTok generados desde `word_timings.json` con la habilidad `tiktok-word-captions`.
+- **Regla de Exclusión (Opt-Out):** Solo se desactivan los subtítulos si el usuario solicita explícitamente en el prompt expresiones como *"sin subtítulos"*, *"no pongas texto en pantalla"*, *"desactivar subtítulos"* o si se invoca con `--no-captions`.
+
+
