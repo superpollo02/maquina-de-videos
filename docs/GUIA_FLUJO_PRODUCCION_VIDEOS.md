@@ -190,3 +190,62 @@ python -m core.orchestrator `
    Nunca concatenes archivos de audio en bruto; el sistema utiliza `adelay` estéreo para insertar `0.55s` de silencio natural entre escenas, permitiendo que el cerebro del estudiante asimile cada idea.
 3. **Validación Previa Obligatoria:**
    Antes de renderizar un video extenso, asegúrate de que el gate `pre_render.py` reporte `passed: true`. Esto evita sorpresas de tipografías faltantes o preguntas superpuestas a la voz.
+
+---
+
+## 7. Instructivo de Uso para Principiantes (Paso a Paso en Tablas de Doble Entrada)
+
+### Tabla 1: Instructivo Paso a Paso — Caso A: Video Común (Lineal MP4)
+
+| Etapa del Flujo | ¿Qué te pregunta o informa la App / Agente? | ¿Qué debes responder o solicitar tú? (Prompt Modelo) | Comando Alternativo por Terminal (CLI) | Configuración / Resultado Obtenido |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Ingesta y Briefing Inicial** | *"¡Hola! ¿Qué documento deseas convertir en video? (PPTX, DOCX o PDF). ¿Tienes algún logo o imagen institucional para definir los colores?"* | *"Hola. Quiero crear un **video común explicativo** a partir del archivo adjunto `tema1_historia.pptx`. Usá el logo `sello educai.jpg` para los colores y voz argentina."* | `python -m core.orchestrator --project-dir "films/tema1" --doc "tema1_historia.pptx" --theme-image "sello educai.jpg" --title "Tema 1"` | Se crea la carpeta del proyecto, se extraen las diapositivas y notas del orador, y se calcula la paleta de 8 colores armónicos. |
+| **2. Revisión de Guion y Estilo** | *"He estructurado el video en 3 escenas de 60 segundos cada una. Los colores principales serán Azul Noche (#0f172a) y Acento Dorado (#facc15). ¿Deseas modificar alguna frase de la locución antes de grabar la voz?"* | *"El guion está excelente, pero en la escena 2 agregá énfasis en la fecha 1816."* (O simplemente: *"Aprobado, continuá"*). | *(Se puede editar directamente `scenes.json` si se desea)* | Se aprueba `scenes.json` y se genera `DESIGN.md` con las variables CSS del lienzo. |
+| **3. Configuración de Subtítulos y Voz** | *"Sintetizaré la voz en tono argentino (`es-AR-ElenaNeural`). Por defecto incluiré **subtítulos animados palabra por palabra estilo CapCut**. ¿Deseas mantenerlos?"* | **Para mantenerlos (por defecto):** *"Sí, dejalos así."*<br><br>**Para quitarlos (Opt-Out):** *"No, hacelo sin subtítulos."* | **Con subtítulos:** *(por defecto)*<br><br>**Sin subtítulos:**<br>`--no-captions` | Se generan `scene_XX.mp3`, `audio_timeline.json` y `word_timings.json` (marcas por palabra al milisegundo). |
+| **4. Validación Pre-Render (QA)** | *"Ejecutando auditoría Pre-Render en Chromium headless... Verificando 0 errores de consola y duración sincronizada... [Pre-QA: APROBADO]"* | *(No requiere acción del usuario; el sistema valida automáticamente la integridad de assets y audio).* | `python -m core.qa.pre_render --project-dir "films/tema1"` | El Gate Pre-Render valida que no existan tipografías rotas ni desfasajes antes de renderizar cuadros. |
+| **5. Renderizado y Ensamble** | *"Renderizando fotogramas a 24 fps en disco, mezclando audio estéreo con pausas naturales de 0.55s y concatenando el cierre institucional..."* | *(Esperar la finalización del proceso en segundo plano).* | *(Flag opcional para reanudar si se cortó):*<br>`--skip-render` | Se genera `video_raw.mp4`, se mezcla `audio_mixed.m4a` (-16 LUFS) y se une `ending_norm.mp4`. |
+| **6. Entrega Final del Archivo** | *"¡Video completado con éxito! Se verificó el flujo H.264/AAC sin saltos. Puedes descargarlo en: `films/tema1/Tema 1_EducAI_Final.mp4`"* | *"Muchas gracias. Lo descargo para proyectarlo en clase y subirlo a YouTube."* | `vlc "films/tema1/Tema 1_EducAI_Final.mp4"` | Archivo `.mp4` Full HD listo para compartir en cualquier plataforma. |
+
+---
+
+### Tabla 2: Instructivo Paso a Paso — Caso B: Video-Cuestionario SCORM (Moodle)
+
+| Etapa del Flujo | ¿Qué te pregunta o informa la App / Agente? | ¿Qué debes responder o solicitar tú? (Prompt Modelo) | Comando Alternativo por Terminal (CLI) | Configuración / Resultado Obtenido |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Ingesta y Definición Evaluativa** | *"¡Hola! ¿Qué material pedagógico deseas transformar en **video-cuestionario interactivo**? ¿Cuántas preguntas evaluativas deseas y qué tipo de opciones prefieres?"* | *"Hola. Quiero transformar `modulo2_didactica.docx` en un **video interactivo SCORM para Moodle**. Incluí 3 preguntas de opción múltiple con 3 opciones cada una al finalizar cada sección principal."* | `python -m core.orchestrator --project-dir "films/modulo2" --doc "modulo2_didactica.docx" --theme-image "sello educai.jpg" --title "Modulo 2 Didactica"` | Ingesta del documento docente y segmentación temática con puntos de inserción evaluativa. |
+| **2. Revisión de Preguntas y Sincronía (Invariante 1)** | *"Formulé 3 preguntas formativas situadas al finalizar la narración de cada tema (+0.05s). Aquí tienes el borrador: [Pregunta 1, Opciones, Correcta...]. ¿Deseas cambiar alguna pregunta o la respuesta correcta?"* | *"Cambiá la opción A de la pregunta 2 por 'Aprendizaje basado en proyectos' y marcá esa como correcta. El resto está perfecto."* | *(Se valida y guarda en `scorm_checkpoints.json`)* | **Invariante 1 aplicada:** Las pausas quedan fijadas estrictamente en el silencio posterior a la voz docente; **jamás cortan una frase**. |
+| **3. Configuración de Subtítulos y Locución** | *"Grabando narración y extrayendo cronograma de palabras para subtítulos CapCut. La pantalla completa se configurará sobre el contenedor para que las preguntas no queden ocultas. ¿Avanzamos?"* | *"Sí, adelante con subtítulos y voz argentina."* (O: *"Sin subtítulos"* si se prefiere). | `--voice "es-AR-ElenaNeural"` *(Subtítulos activos por defecto)* | Locución procesada a `-2%` de velocidad y marcas `WordBoundary` listas. |
+| **4. Validación Pre-Render y Render** | *"Auditoría Pre-Render ejecutada en Chromium headless: verificados checkpoints, sincronía de audio y eventos DOM... [Pre-QA: APROBADO]. Renderizando video base..."* | *(El usuario solo observa el avance del agente).* | `python -m pytest tests/e2e/test_orchestrator_e2e.py` | Se verifica que los eventos de pausa `timeupdate` no tengan colisiones ni errores JavaScript. |
+| **5. Post-QA y Empaquetado Dual SCORM (Invariante 2)** | *"Video base compilado y auditado con `ffprobe`. Se generaron dos paquetes SCORM 1.2:  1) `*_SCORM_Completo.zip` (Autocontenido con video adentro)  2) `*_SCORM.zip` (Zero-Weight < 400 KB para límites de campus) ¿Cuál es la cuota máxima de subida de tu Moodle?"* | *"Mi campus virtual solo me deja subir archivos de hasta 10 MB, así que usaré el paquete liviano `_SCORM.zip` apuntando al video alojado en el drive institucional."* | `python -m core.scorm.scorm_packager --title "Modulo 2 Didactica" --video-url "Modulo2_EducAI_Final.mp4" --dual-zip` | **Invariante 2:** `controlsList="nofullscreen"` y botón fullscreen en `#player-container`. Emisión de la arquitectura **Dual ZIP**. |
+| **6. Despliegue en el Campus Virtual (Moodle)** | *"El paquete SCORM 1.2 está listo. Sigue estos 4 pasos en Moodle:  1. Activar edición en tu curso.  2. Añadir actividad -> Paquete SCORM.  3. Arrastrar el archivo `.zip`.  4. En 'Calificación', definir método 'Calificación más alta' y guardar."* | *"¡Excelente! Acabo de subir el archivo `.zip` a Moodle, probé el cuestionario interactivo y registró la nota en el libro de calificaciones."* | *(Prueba local previa en navegador):*<br>`python -m http.server 8080` $\to$ `localhost:8080` | Los alumnos ven el video, responden las preguntas en pantalla al terminar cada tema y su nota queda asentada en Moodle. |
+
+---
+
+### Tabla 3: Guía Rápida de Atajos y Modificadores
+
+| Qué deseas configurar | Qué decirle al Agente en el Chat (Prompt) | Parámetro por Línea de Comandos (CLI) |
+| :--- | :--- | :--- |
+| **Subtítulos Dinámicos (CapCut)** | *"Con subtítulos"* (Activo por defecto) / *"Sin subtítulos"* (Opt-Out) | `--no-captions` (solo para desactivar) |
+| **Cambiar la Voz Narradora** | *"Usá la voz de Tomás"* o *"Usá la voz de Ingrid"* | `--voice "es-AR-TomasNeural"` o `--voice "es-CL-CatalinaNeural"` |
+| **Velocidad de la Locución** | *"Hacé la voz un poco más pausada/rápida"* | *(Automático: `-2%` para claridad pedagógica)* |
+| **Estilo Visual del Lienzo** | *"Estilo pizarra con dibujos"* o *"Estilo diapositivas modernas con tarjetas"* | `--render-mode canvas` o `--render-mode hyperframes` |
+| **Reanudar Render Interrumpido** | *"Se cortó el render, retomalo desde los cuadros existentes"* | `--skip-render` (reutiliza `frames/` y salta al multiplexado) |
+| **Servidores Moodle Estrictos (< 10 MB)** | *"El aula virtual no me deja subir archivos pesados"* | Usar el paquete `*_SCORM.zip` (Zero-Weight, pesa menos de $400\text{ KB}$) |
+
+---
+
+## 8. Galería de Producciones Demostrativas Generadas
+
+El repositorio incluye las dos producciones completas que demuestran este flujo de trabajo:
+
+1. **Caso A (Video Común Lineal):**
+   * Carpeta: [`films/instructivo-caso-a-video-comun/`](../films/instructivo-caso-a-video-comun/)
+   * Video Final MP4: [`Instructivo_Caso_A_Video_Comun_EducAI_Final.mp4`](../films/instructivo-caso-a-video-comun/Instructivo_Caso_A_Video_Comun_EducAI_Final.mp4) (81.5s, Full HD 1080p, subtítulos CapCut quemados).
+   * Tratamiento de Dirección: [`TREATMENT.md`](../films/instructivo-caso-a-video-comun/TREATMENT.md)
+2. **Caso B (Video-Cuestionario SCORM para Moodle):**
+   * Carpeta: [`films/instructivo-caso-b-video-scorm/`](../films/instructivo-caso-b-video-scorm/)
+   * Video Base MP4: [`Instructivo_Caso_B_Video_SCORM_EducAI_Final.mp4`](../films/instructivo-caso-b-video-scorm/Instructivo_Caso_B_Video_SCORM_EducAI_Final.mp4) (79.1s, Full HD 1080p).
+   * Paquete Autocontenido: [`Instructivo_Caso_B_Video_SCORM_SCORM_Completo.zip`](../films/instructivo-caso-b-video-scorm/Instructivo_Caso_B_Video_SCORM_SCORM_Completo.zip) ($4.33\text{ MB}$).
+   * Paquete Zero-Weight: [`Instructivo_Caso_B_Video_SCORM_SCORM.zip`](../films/instructivo-caso-b-video-scorm/Instructivo_Caso_B_Video_SCORM_SCORM.zip) ($4.6\text{ KB}$).
+   * Tratamiento y Checkpoints: [`TREATMENT.md`](../films/instructivo-caso-b-video-scorm/TREATMENT.md) y [`scorm_checkpoints.json`](../films/instructivo-caso-b-video-scorm/scorm_checkpoints.json).
+

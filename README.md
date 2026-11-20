@@ -186,6 +186,7 @@ maquina-de-videos/
 ├── pyproject.toml             # Configuración de dependencias y suite de pytest
 ├── core/
 │   ├── brand_theme.py         # Extracción de paleta de 8 colores desde logos
+│   ├── captions/              # Generador de subtítulos CapCut (.ass karaoke)
 │   ├── parsers/doc_parser.py  # Ingesta de PPTX, DOCX y PDF
 │   ├── qa/
 │   │   ├── pre_render.py      # Gate de calidad previo al renderizado
@@ -193,12 +194,17 @@ maquina-de-videos/
 │   ├── orchestrator/
 │   │   ├── pipeline.py        # EducAIPipeline (orquestador de 8 fases)
 │   │   ├── scene_builder.py   # Constructor de escenas y alineador SCORM
+│   │   ├── video_render.py    # Renderizador motion graphics con tarjetas y subtítulos
 │   │   └── outro_mux.py       # Multiplexado estéreo y ensamble con ending_norm.mp4
 │   └── scorm/
 │       └── scorm_packager.py  # Generador Dual ZIP SCORM 1.2 para Moodle
+├── docs/                      # Guías operativas e instructivos paso a paso
+│   └── GUIA_FLUJO_PRODUCCION_VIDEOS.md
 ├── films/                     # Producciones y video-clases generadas
 │   ├── cuando-el-trabajo-deja-de-ser-necesario/
 │   ├── estructura-tripartita/
+│   ├── instructivo-caso-a-video-comun/
+│   ├── instructivo-caso-b-video-scorm/
 │   └── protocolo-relevamiento/
 ├── skills/                    # Especificaciones operativas de habilidades
 ├── tests/                     # Suite de pruebas E2E (Unit, Contratos, Chrome)
