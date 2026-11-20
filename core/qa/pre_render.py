@@ -24,6 +24,7 @@ def _probe_duration(path: Path) -> float:
         encoding="utf-8",
         errors="replace",
         check=True,
+        timeout=30,
     )
     return float(res.stdout.strip())
 

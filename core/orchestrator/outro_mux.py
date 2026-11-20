@@ -45,6 +45,7 @@ def mux_audio_video(
         encoding="utf-8",
         errors="replace",
         check=True,
+        timeout=300,
     )
     return out_path
 
@@ -98,6 +99,7 @@ def concat_with_outro(
             text=True,
             encoding="utf-8",
             errors="replace",
+            timeout=300,
         )
 
         if res.returncode != 0:
@@ -125,6 +127,7 @@ def concat_with_outro(
                 encoding="utf-8",
                 errors="replace",
                 check=True,
+                timeout=300,
             )
     finally:
         if concat_list_path.exists():

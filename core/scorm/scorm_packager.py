@@ -8,10 +8,12 @@ invariants (safe fullscreen, robust checkpoint trigger windows, and speech synch
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import os
 import re
 import sys
+import xml.sax.saxutils as xml_escape
 import zipfile
 from pathlib import Path
 from typing import Any, Optional
@@ -424,6 +426,15 @@ def _format_time_str(seconds: float) -> str:
     return f"{m:02d}:{s:02d}"
 
 
+def _sanitize_video_src(src: str) -> str:
+    """Validate and sanitize video source URL or filename to prevent script injection."""
+    s = str(src).strip()
+    low = s.lower()
+    if low.startswith(("javascript:", "vbscript:", "data:", "about:", "blob:")):
+        raise ValueError(f"Esquema de video no seguro detectado: {src}")
+    return html.escape(s, quote=True)
+
+
 def build_scorm_package(
     title: str,
     video_url: str,
@@ -468,22 +479,38 @@ def build_scorm_package(
             cp_copy["time_str"] = _format_time_str(float(cp_copy["timestamp"]))
         cps_formatted.append(cp_copy)
 
-    identifier = "educai_scorm_" + re.sub(r"[^a-zA-Z0-9_]", "_", title.lower())[:24]
+    # Security sanitization for HTML and XML
+    safe_title_html = html.escape(title, quote=True)
+    safe_title_xml = xml_escape.escape(title, entities={'"': "&quot;", "'": "&apos;"})
+
+    raw_ident_seed = re.sub(r"[^a-zA-Z0-9_]", "_", title.lower())[:24]
+    identifier = "educai_scorm_" + (raw_ident_seed or "course")
+    safe_identifier = xml_escape.escape(identifier, entities={'"': "&quot;", "'": "&apos;"})
+
+    # Prevent </script> breakout inside inline JavaScript block
+    safe_checkpoints_json = (
+        json.dumps(cps_formatted, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+    )
 
     # Decide primary package contents
     video_basename = Path(include_video_file).name if include_video_file else video_url
     video_src = video_basename if include_video_file else video_url
-    extra_files = f'\n      <file href="{video_basename}"/>' if include_video_file else ""
+    safe_video_src = _sanitize_video_src(video_src)
+
+    safe_video_basename = xml_escape.escape(video_basename, entities={'"': "&quot;", "'": "&apos;"})
+    extra_files = f'\n      <file href="{safe_video_basename}"/>' if include_video_file else ""
 
     html_content = (
-        SCORM_HTML_TEMPLATE.replace("{title}", title)
-        .replace("{video_src}", video_src)
-        .replace("{checkpoints_json}", json.dumps(cps_formatted, ensure_ascii=False))
+        SCORM_HTML_TEMPLATE.replace("{title}", safe_title_html)
+        .replace("{video_src}", safe_video_src)
+        .replace("{checkpoints_json}", safe_checkpoints_json)
     )
 
     manifest_content = (
-        MANIFEST_XML_TEMPLATE.replace("{identifier}", identifier)
-        .replace("{title}", title)
+        MANIFEST_XML_TEMPLATE.replace("{identifier}", safe_identifier)
+        .replace("{title}", safe_title_xml)
         .replace("{extra_files}", extra_files)
     )
 
@@ -506,14 +533,15 @@ def build_scorm_package(
             zero_name = out_path.stem + "_ZeroWeight.zip"
         zero_zip_path = out_path.with_name(zero_name)
 
+        safe_zero_video_src = _sanitize_video_src(video_url)
         zero_html = (
-            SCORM_HTML_TEMPLATE.replace("{title}", title)
-            .replace("{video_src}", video_url)
-            .replace("{checkpoints_json}", json.dumps(cps_formatted, ensure_ascii=False))
+            SCORM_HTML_TEMPLATE.replace("{title}", safe_title_html)
+            .replace("{video_src}", safe_zero_video_src)
+            .replace("{checkpoints_json}", safe_checkpoints_json)
         )
         zero_manifest = (
-            MANIFEST_XML_TEMPLATE.replace("{identifier}", identifier + "_zw")
-            .replace("{title}", title)
+            MANIFEST_XML_TEMPLATE.replace("{identifier}", safe_identifier + "_zw")
+            .replace("{title}", safe_title_xml)
             .replace("{extra_files}", "")
         )
 

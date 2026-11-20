@@ -56,6 +56,7 @@ def validate_post_render(
             encoding="utf-8",
             errors="replace",
             check=True,
+            timeout=30,
         )
         probe_data = json.loads(proc.stdout)
     except Exception as exc:
@@ -131,6 +132,7 @@ def validate_post_render(
                 text=True,
                 encoding="utf-8",
                 errors="replace",
+                timeout=60,
             )
             details["checks_passed"].append("silencedetect_evaluated")
         except Exception as exc:
@@ -159,6 +161,7 @@ def validate_post_render(
                     text=True,
                     encoding="utf-8",
                     errors="replace",
+                    timeout=30,
                 )
                 if frame_out.is_file():
                     # Pure black 1080p PNG is typically < 3KB

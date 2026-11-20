@@ -12,10 +12,16 @@ from core.captions.capcut_ass import build_capcut_ass
 
 
 def _clean_text_for_drawtext(text: str) -> str:
-    """Clean and escape text for FFmpeg drawtext filter."""
-    t = text.replace(":", "\\:").replace("'", "\\'").replace("%", "\\%")
-    # Remove control characters
-    t = re.sub(r"[\r\n\t]+", " ", t).strip()
+    """Clean and escape text for FFmpeg drawtext filter safely."""
+    if not text:
+        return ""
+    # Remove control characters and newlines
+    t = re.sub(r"[\r\n\t]+", " ", str(text)).strip()
+    # Normalize quotes to typographical quotes to prevent quote breakage in FFmpeg filter syntax
+    t = t.replace("'", "’").replace('"', '”')
+    # Escape special characters in FFmpeg drawtext filter parameters
+    t = t.replace("\\", "\\\\").replace(":", "\\:").replace("%", "\\%")
+    t = t.replace("[", "\\[").replace("]", "\\]").replace(";", "\\;")
     return t
 
 
@@ -147,5 +153,5 @@ def render_motion_graphics_video(
     ]
 
     print(f"[VideoRender] Rendering motion graphics video ({total_duration:.2f}s, {fps}fps)...")
-    subprocess.run(cmd, capture_output=True, check=True)
+    subprocess.run(cmd, capture_output=True, check=True, timeout=600)
     return out_file

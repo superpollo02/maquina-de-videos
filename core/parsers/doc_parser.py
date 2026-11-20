@@ -10,9 +10,26 @@ import json
 import argparse
 from pathlib import Path
 
+MAX_FILE_SIZE_MB = 50
+
+
+def validate_input_file(file_path: str | Path, max_size_mb: int = MAX_FILE_SIZE_MB) -> Path:
+    """Validate file existence, regular file status, and size to mitigate DoS and decompression bombs."""
+    p = Path(file_path).resolve()
+    if not p.is_file():
+        raise FileNotFoundError(f"Archivo de entrada no encontrado o inaccesible: {p}")
+    size_mb = p.stat().st_size / (1024 * 1024)
+    if size_mb > max_size_mb:
+        raise ValueError(
+            f"El archivo supera el tamaño máximo permitido de {max_size_mb} MB ({size_mb:.2f} MB)."
+        )
+    return p
+
+
 def parse_pptx(file_path):
+    p = validate_input_file(file_path)
     from pptx import Presentation
-    prs = Presentation(file_path)
+    prs = Presentation(str(p))
     slides_data = []
 
     for idx, slide in enumerate(prs.slides, 1):
@@ -51,8 +68,9 @@ def parse_pptx(file_path):
     }
 
 def parse_docx(file_path):
+    p = validate_input_file(file_path)
     from docx import Document
-    doc = Document(file_path)
+    doc = Document(str(p))
     sections = []
     current_sec = {"title": "Introducción", "paragraphs": [], "tables": []}
 
@@ -79,6 +97,8 @@ def parse_docx(file_path):
     }
 
 def parse_pdf(file_path):
+    p = validate_input_file(file_path)
+    file_path = str(p)
     text_pages = []
 
     # 1. Try pypdf
@@ -127,13 +147,14 @@ def parse_pdf(file_path):
     }
 
 def parse_document(input_path, output_json=None):
-    ext = Path(input_path).suffix.lower()
+    p = validate_input_file(input_path)
+    ext = p.suffix.lower()
     if ext == ".pptx":
-        data = parse_pptx(input_path)
+        data = parse_pptx(p)
     elif ext == ".docx":
-        data = parse_docx(input_path)
+        data = parse_docx(p)
     elif ext == ".pdf":
-        data = parse_pdf(input_path)
+        data = parse_pdf(p)
     else:
         raise ValueError(f"Formato no soportado: {ext}. Utilice .pptx, .docx o .pdf")
 
