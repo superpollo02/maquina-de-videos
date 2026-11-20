@@ -98,6 +98,13 @@ class EducAIPipeline:
         raw_checkpoints = []
         for sc in scenes:
             raw_checkpoints.extend(sc.get("checkpoints", []))
+        if not raw_checkpoints:
+            local_cp = self.project_dir / "checkpoints.json"
+            if local_cp.is_file():
+                try:
+                    raw_checkpoints = json.loads(local_cp.read_text(encoding="utf-8"))
+                except Exception:
+                    raw_checkpoints = []
         if raw_checkpoints:
             aligned_cps = align_checkpoints_to_timeline(raw_checkpoints, timeline)
             cp_path = self.project_dir / "scorm_checkpoints.json"
@@ -125,7 +132,7 @@ class EducAIPipeline:
         video_raw_path = self.project_dir / "video_raw.mp4"
         if not skip_render or not video_raw_path.is_file():
             print(f"[Stage 5] Rendering visuals with backend '{render_mode}'...")
-            self._render_visuals(render_mode, total_audio_duration, video_raw_path)
+            self._render_visuals(render_mode, total_audio_duration, video_raw_path, captions=captions)
         else:
             print(f"[Stage 5] Skipping render; reusing existing {video_raw_path}")
 
@@ -245,7 +252,13 @@ class EducAIPipeline:
         ]
         subprocess.run(cmd, capture_output=True, check=True)
 
-    def _render_visuals(self, render_mode: str, total_duration: float, output_raw: Path) -> None:
+    def _render_visuals(
+        self,
+        render_mode: str,
+        total_duration: float,
+        output_raw: Path,
+        captions: bool = True,
+    ) -> None:
         """Dispatch rendering to the chosen backend."""
         if render_mode == "canvas":
             # Reusable canvas render from frames/ or render_frames.js
@@ -273,21 +286,25 @@ class EducAIPipeline:
                 subprocess.run(["node", str(render_js)], cwd=str(self.project_dir), check=True)
                 return
 
-        # Default synthetic/hyperframes fallback generator: creates 1080p video matching total duration
-        print(f"[Render] Synthesizing video frames with duration {total_duration:.2f}s...")
-        subprocess.run(
-            [
-                "ffmpeg", "-y",
-                "-f", "lavfi",
-                "-i", f"color=c=0x0F172A:s=1920x1080:d={total_duration}:r=24",
-                "-c:v", "libx264",
-                "-pix_fmt", "yuv420p",
-                "-preset", "veryfast",
-                str(output_raw),
-            ],
-            capture_output=True,
-            check=True,
-        )
+        # Motion graphics / HyperFrames renderer with dynamic scene cards & CapCut captions
+        try:
+            from core.orchestrator.video_render import render_motion_graphics_video
+            render_motion_graphics_video(self.project_dir, total_duration, output_raw, captions=captions)
+        except Exception as e:
+            print(f"[Render Fallback] Motion graphics generator encountered: {e}. Falling back to standard lavfi generator...")
+            subprocess.run(
+                [
+                    "ffmpeg", "-y",
+                    "-f", "lavfi",
+                    "-i", f"color=c=0x0F172A:s=1920x1080:d={total_duration}:r=24",
+                    "-c:v", "libx264",
+                    "-pix_fmt", "yuv420p",
+                    "-preset", "veryfast",
+                    str(output_raw),
+                ],
+                capture_output=True,
+                check=True,
+            )
 
 
 def main() -> None:
