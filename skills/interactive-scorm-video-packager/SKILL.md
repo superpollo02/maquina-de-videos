@@ -48,3 +48,16 @@ python core/scorm/scorm_packager.py `
 El reproductor reporta automáticamente a la API SCORM de Moodle:
 - `cmi.core.score.raw` (porcentaje acumulado de respuestas correctas 0 a 100).
 - `cmi.core.lesson_status` (`passed` si el puntaje >= 60%, de lo contrario `completed` o `incomplete`).
+
+## Reglas de Sincronía, UX y Despliegue en Moodle
+
+1. **Ubicación por Fin de Locución (`audio_timeline.json`):**
+   - Nunca ubicar un `timestamp` en medio de una frase narrada. Consultar `audio_timeline.json` y fijar cada checkpoint justo al `end` de la escena correspondiente (`+0.05s` a `+0.1s`, antes del inicio de la escena siguiente).
+2. **Pantalla Completa sobre el Contenedor:**
+   - Usar `controlsList="nofullscreen"` en `<video>` y maximizar `#player-container` vía JS. Maximizar `<video>` directamente en HTML5 oculta el `#overlay` de preguntas detrás del reproductor.
+3. **Visibilidad e Indicador de Checkpoints:**
+   - Incluir una barra superior permanente indicando el próximo checkpoint (`Sección (en MM:SS)`) y una ventana de disparo de `1.2s` en `timeupdate`.
+4. **Modos de Empaquetado y Coincidencia de Ruta:**
+   - Verificar que `<source src="...">` coincida exactamente con el nombre del `.mp4` final.
+   - **Zero-Weight (Streaming):** Requiere URL HTTP directa al `.mp4` (CDN, Cloudflare R2, S3, servidor institucional). YouTube no funciona dentro de `<video src>` por CORS (requeriría `YT.Player`).
+   - **Autocontenido (`*_SCORM_Completo.zip`):** Incluir el `.mp4` dentro del ZIP y declararlo en `imsmanifest.xml` cuando la cuota de subida de Moodle lo permita.
